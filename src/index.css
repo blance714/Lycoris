@@ -1,3 +1,8 @@
+html {
+  font-size: calc(100vw / 20);
+  overflow: hidden;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,6 +11,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
+
 }
 
 code {
@@ -16,5 +22,5 @@ code {
 :root {
   --ev-color: 255, 255, 255;
   --ev-fg-color: 0, 0, 0;
-  --theme-color: 255, 255, 255;
+  --theme-color: 255, 97, 120;
 }

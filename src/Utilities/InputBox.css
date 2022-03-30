@@ -1,27 +1,38 @@
 .inputBox {
   box-sizing: border-box;
   width: 100%;
-  height: 1.7rem;
+  height: 2rem;
   background-color: rgb(221, 221, 221);
   
-  padding: 0.3rem;
+  padding: 0 0.3rem;
   border-radius: 0.5rem;
 
   display: flex;
   justify-content: left;
+  align-items: center;
 }
 
-.inputBox > input {
+.inputBox form {
+  width: 100%;
+}
+
+.inputBox input {
   box-sizing: border-box;
   width: 100%;
+  margin: 0;
+  border: 0;
+  padding: 0;
 
-  font-size: 1rem;
+  font-size: inherit;
 
   border-style: none;
   outline-style: none;
   background-color: transparent;
+
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.inputBox svg {
-  height: 100%;
+.inputBox img {
+  height: 70%;
 }

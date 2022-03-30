@@ -1,0 +1,12 @@
+.textButton {
+  color: rgb(var(--theme-color));
+  font-weight: bold;
+  cursor: pointer;
+  transition: all .4s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.textButton:active {
+  color: rgba(var(--theme-color), 0.3);
+  transition: none;
+}

@@ -21,21 +21,24 @@ class Search extends React.Component {
           <SearchBar
             isFocusing={this.state.isFocusing}
             handleFocus={(e) => this.setState({
-              isFocusing: !this.state.isFocusing
-            })}
-            handleBlur={() => this.setState({
+              isFocusing: true
+            })} 
+            handleBlur={(e) => this.setState({
               isFocusing: false
-            })}/>
-          <div id='search-content-wrapper'>
-            <SearchContent />
-          </div>
+            })} 
+          />
+        </div>
+        <div id='search-content-wrapper'>
+          <SearchContent />
+        </div>
+        <div id='search-suggestion-content-wrapper'>
+          <SearchContent isFocusing/>
         </div>
         <div style={{display: 'block',
           position: 'relative',
           left: 0,
           top: '0'
         }}>
-          <SearchContent isFocusing/>
         </div>
       </div>
     );
