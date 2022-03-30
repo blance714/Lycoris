@@ -1,0 +1,34 @@
+.searchBar {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  background-color: rgba(var(--ev-color), 0.65);
+  backdrop-filter: blur(20px);
+
+  transition: all var(--tr-time);
+}
+
+.isFocusing .searchBar {
+  background-color: rgb(var(--ev-color));
+}
+
+.searchBar > h3 {
+  height: 1.75rem;
+  margin: 0.3rem;
+
+  transition: all var(--tr-time) cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+.isFocusing .searchBar > h3 {
+  height: 0rem;
+  opacity: 0;
+}
+
+.searchBar .searchBarInputWrapper {
+  box-sizing: border-box;
+  width: 88%;
+  margin-bottom: 0.6rem;
+}

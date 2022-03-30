@@ -3,13 +3,12 @@ import './App.css';
 import React from 'react';
 
 import InputBox from './Utilities/InputBox';
+import Search from './Pages/Search/Search'
 
 function App() {
   return (
     <div id='app-wrapper'>
-      <div style={{margin: '1rem', width: '5rem'}}>
-        <InputBox />
-      </div>
+      <Search />
     </div>
   );
 }
