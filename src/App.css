@@ -1,5 +1,16 @@
 #app-wrapper {
   width: 100%;
-  height: calc(100vh);
-  overflow: hidden;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#page-wrapper {
+  width: 100%;
+}
+
+#navigatorbar-wrapper {
+  flex-grow: 0;
+  width: 100%;
 }

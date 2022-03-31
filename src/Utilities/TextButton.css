@@ -2,7 +2,6 @@
   color: rgb(var(--theme-color));
   font-weight: bold;
   cursor: pointer;
-  transition: all .4s;
   -webkit-tap-highlight-color: transparent;
 }
 

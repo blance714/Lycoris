@@ -49,4 +49,4 @@ class SearchItemWrapper extends React.Component {
   }
 }
 
-export default SearchItemWrapper;
+export default SearchItem;

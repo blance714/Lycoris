@@ -3,13 +3,17 @@ import React from 'react';
 import './Search.css';
 import SearchBar from './SearchBar';
 import SearchContent from './SearchContent';
+import SearchResult from './SearchResult';
+
+import Agent from '../../Tools/Agent';
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isFocusing: false
+      isFocusing: false,
+      searchResult: []
     };
   }
 
@@ -25,11 +29,18 @@ class Search extends React.Component {
             })} 
             handleBlur={(e) => this.setState({
               isFocusing: false
-            })} 
+            })}
+            handleSubmit={e => {
+              console.log(e.target.input.value);
+              Agent.search(e.target.input.value)
+                .then(v => Agent.parseSearchResult(v))
+                .then(v => this.setState({searchResult: v}));
+              e.target.input.blur();
+            }}
           />
         </div>
         <div id='search-content-wrapper'>
-          <SearchContent />
+          <SearchResult result={this.state.searchResult} />
         </div>
         <div id='search-suggestion-content-wrapper'>
           <SearchContent isFocusing/>

@@ -3,6 +3,7 @@ import React from "react";
 
 function InputBox(props) {
   const input = <input
+    name="input" autoComplete='off'
     type={props.type ? props.type : 'text'}
     placeholder={props.placeholder}
     onChange={props.handleChange}
@@ -15,7 +16,10 @@ function InputBox(props) {
     <div className='inputBox'>
       <img src={props.imgSrc} />
       {props.type == 'search'
-        ? <form action='' onSubmit={props.handleSubmit}>{input}</form>
+        ? <form action='' onSubmit={(e) => {
+            e.preventDefault();
+            props.handleSubmit && props.handleSubmit(e);
+          }}>{input}</form>
         : {input}}
     </div>
   );
