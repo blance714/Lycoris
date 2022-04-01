@@ -29,3 +29,24 @@ code {
   --ev-fg-color: 0, 0, 0;
   --theme-color: 255, 97, 120;
 }
+
+.pagesChange-enter {
+  transform: translateX(100%);
+  transition: transform .3s;
+}
+
+.pagesChange-enter-active {
+  transform: translateX(0);
+}
+
+.pagesChange-exit {
+  position: absolute;
+  top: 0;
+  transform: translateX(0);
+  transition: transform .3s;
+}
+
+.pagesChange-exit-active {
+  transform: translateX(-100%);
+  
+}

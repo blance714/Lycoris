@@ -1,25 +1,53 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import {Routes, Route, BrowserRouter} from 'react-router-dom';
+import {Routes, Route, MemoryRouter, useLocation, HashRouter, BrowserRouter} from 'react-router-dom';
 import Search from './Pages/Search/Search';
 import SearchContent from './Pages/Search/SearchContent';
+import { TransitionGroup } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
+import KeepAlive, { AliveScope } from 'react-activation';
 
-ReactDOM.render(
+
+function Root() {
+  const location = useLocation();
+  return (
+    // <TransitionGroup component={null}>
+      //<CSSTransition key={location.key} classNames='pagesChange' timeout={300}
+      //mountOnEnter unmountOnExit>
+        <Routes>
+          <Route path='/' element={
+            <App />
+          }>
+            <Route path='search' element={
+              // <Search />
+              <KeepAlive saveScrollPosition={true}>
+                <SearchContent isFocusing/>
+              </KeepAlive>
+            } />
+            <Route path='test' element={
+              // <KeepAlive>
+                <SearchContent />
+              // </KeepAlive>
+            } />
+          </Route>
+        </Routes>
+      ///* </CSSTransition> */}
+    // </TransitionGroup>
+  )
+}
+
+createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<App />}>
-          <Route index path='search' element={<Search />} />
-          <Route path='test' element={<SearchContent />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <MemoryRouter initialEntries={['/']}>
+      <AliveScope>
+        <Root />
+      </AliveScope>
+    </MemoryRouter>
   </React.StrictMode>,
-  document.getElementById('root')
 );
 
 window.onresize = () => {

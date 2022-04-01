@@ -10,8 +10,10 @@ class SearchItem extends React.Component {
     this.state = {
       src: defImg
     };
+  }
 
-    Promise.resolve(props.data.getPicUrl())
+  componentDidMount() {
+    Promise.resolve(this.props.data.getPicUrl())
       .then(v => v && this.setState({src: v}));
   }
 

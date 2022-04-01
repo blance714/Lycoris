@@ -4,7 +4,7 @@ import './NavigateBar.css'
 
 function NavigateBar() {
   return (
-    <nav class='navigateBar'>
+    <nav className='navigateBar'>
       <Link to='search'>Search</Link>
       <Link to='test'>Test</Link>
     </nav>
