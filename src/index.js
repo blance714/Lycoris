@@ -1,52 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import {Routes, Route, MemoryRouter, useLocation, HashRouter, BrowserRouter} from 'react-router-dom';
+import {Routes, Route, MemoryRouter, useLocation, HashRouter, BrowserRouter, useMatch, useNavigationType, matchPath} from 'react-router-dom';
 import Search from './Pages/Search/Search';
 import SearchContent from './Pages/Search/SearchContent';
 import { TransitionGroup } from 'react-transition-group';
 import { CSSTransition } from 'react-transition-group';
 import KeepAlive, { AliveScope } from 'react-activation';
+import { createBrowserHistory } from 'history';
 
+function TestPage() {
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  let noTransition = useMatch('/test/*');
+  noTransition = useMatch('/search/*') || noTransition;
+
+  return (
+    <>
+    <TransitionGroup component={null} childFactory={child => React.cloneElement(child, {
+      classNames: navigationType == 'POP' ? 'pagesOut' : (noTransition ? '' : 'pagesIn'),
+      timeout: (navigationType == 'POP' || !noTransition) ? 300 : 0
+    })}>
+      <CSSTransition key={location.pathname} timeout={300}>
+        <Routes location={location}>
+          <Route path='/search' element={
+            <KeepAlive saveScrollPosition="#page-wrapper">
+              <Search />
+            </KeepAlive>
+          } />
+          <Route path='/test' element={<SearchContent />} />
+        </Routes>
+      </CSSTransition>
+    </TransitionGroup>
+    </>
+  )
+}
 
 function Root() {
   const location = useLocation();
+  console.log(location.pathname);
   return (
-    // <TransitionGroup component={null}>
-      //<CSSTransition key={location.key} classNames='pagesChange' timeout={300}
-      //mountOnEnter unmountOnExit>
-        <Routes>
-          <Route path='/' element={
-            <App />
-          }>
-            <Route path='search' element={
-              // <Search />
-              <KeepAlive saveScrollPosition={true}>
-                <SearchContent isFocusing/>
-              </KeepAlive>
-            } />
-            <Route path='test' element={
-              // <KeepAlive>
-                <SearchContent />
-              // </KeepAlive>
-            } />
-          </Route>
-        </Routes>
-      ///* </CSSTransition> */}
-    // </TransitionGroup>
+    <App>
+      <TestPage />
+    </App>
   )
 }
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <MemoryRouter initialEntries={['/']}>
+    <BrowserRouter>
       <AliveScope>
         <Root />
       </AliveScope>
-    </MemoryRouter>
+    </BrowserRouter>
   </React.StrictMode>,
 );
 

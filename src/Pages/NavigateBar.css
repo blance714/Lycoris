@@ -1,4 +1,57 @@
 .navigateBar {
+  box-sizing: border-box;
+  height: 3rem;
+  padding: .2rem;
+  border-top: 1px solid gainsboro;
+
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+}
+
+.navigateBarItem {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navigateBarIcon {
+  height: 0;
+  width: 100%;
+  flex: 1;
+
+  background-size: cover;
+  /* background-color: red;
+  background-blend-mode:lighten;
+  background-size: cover; */
+  
+  transform: translateY(3rem);
+  
+  filter: drop-shadow(0 -3rem rgb(var(--ev-fg-color)));
+  /* box-shadow: 0 10px 0 white inset; */
+  /* border-left: 30px solid transparent; */
+  /* filter: brightness(50%); */
+}
+
+.navigateBarIcon img {
+  height: 100%;
+  width: 100%;
+}
+
+.navigateBarItem span {
+  font-size: .6rem;
+  /* font-weight: bold; */
+  color: rgb(var(--ev-fg-color));
+}
+
+.navigateBarItem.active span {
+  color: rgb(var(--theme-color));
+}
+
+.navigateBarItem.active .navigateBarIcon {
+  filter: drop-shadow(0 -3rem rgb(var(--theme-color)));
 }

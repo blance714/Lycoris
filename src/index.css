@@ -30,23 +30,44 @@ code {
   --theme-color: 255, 97, 120;
 }
 
-.pagesChange-enter {
+.pagesIn-enter {
   transform: translateX(100%);
   transition: transform .3s;
 }
 
-.pagesChange-enter-active {
+.pagesIn-enter-active {
   transform: translateX(0);
 }
 
-.pagesChange-exit {
+.pagesIn-exit {
   position: absolute;
   top: 0;
   transform: translateX(0);
   transition: transform .3s;
 }
 
-.pagesChange-exit-active {
+.pagesIn-exit-active {
   transform: translateX(-100%);
+  
+}
+
+.pagesOut-enter {
+  transform: translateX(-100%);
+  transition: transform .3s;
+}
+
+.pagesOut-enter-active {
+  transform: translateX(0);
+}
+
+.pagesOut-exit {
+  position: absolute;
+  top: 0;
+  transform: translateX(0);
+  transition: transform .3s;
+}
+
+.pagesOut-exit-active {
+  transform: translateX(100%);
   
 }

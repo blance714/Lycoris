@@ -7,10 +7,14 @@
 }
 
 #page-wrapper {
-  height: 0;
+  position: relative;
+
+  height: 400px;
   flex: 1;
   overflow: scroll;
 }
 
 #navigatorbar-wrapper {
+  position: relative;
+  z-index: 100;
 }
