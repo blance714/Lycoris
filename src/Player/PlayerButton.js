@@ -1,6 +1,6 @@
 import { IonIcon } from "@ionic/react";
 import classNames from "classnames";
-import { pause, play, playBack, playForward } from "ionicons/icons";
+import { pause, play, playBack, playForward, reloadCircle } from "ionicons/icons";
 import { useState } from "react";
 
 import './PlayerButton.css';
@@ -11,14 +11,21 @@ function PlayerButton(props) {
   if (props.type === 'forward') nowIconProp = {icon: playForward};
   else if (props.type === 'back') nowIconProp = {icon: playBack};
   else if (props.type === 'play') nowIconProp = {
-    icon: props.audioInfo ? (props.audioInfo.paused ? play : pause ) : play
+    icon: props.audioInfo 
+      ? (props.audioInfo.isWaiting
+        ? reloadCircle
+        : (props.audioInfo.paused ? play : pause))
+      : play
   };
   else nowIconProp = { icon: props.type };
 
   const [isActived, setIsActived] = useState(false);
 
   return (
-    <div className={classNames('playerButton', { active: isActived })}
+    <div className={classNames('playerButton', {
+      active: isActived,
+      waiting: props.type === 'play' && props.audioInfo.isWaiting
+    })}
     onClick={e => {
       e.stopPropagation();
       if (isActived) {

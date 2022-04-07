@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import {Routes, Route, MemoryRouter, useLocation, HashRouter, BrowserRouter, useMatch, useNavigationType, matchPath} from 'react-router-dom';
+import {Routes, Route, useLocation, BrowserRouter, useMatch, useNavigationType } from 'react-router-dom';
 import Search from './Pages/Search/Search';
 import SearchContent from './Pages/Search/SearchContent';
 import { TransitionGroup } from 'react-transition-group';
 import { CSSTransition } from 'react-transition-group';
 import KeepAlive, { AliveScope } from 'react-activation';
-import { createBrowserHistory } from 'history';
-import Player from './Player/Player';
-import Test from './Test';
 import PlayListProvider from './Tools/PlayList';
 
 function TestPage() {

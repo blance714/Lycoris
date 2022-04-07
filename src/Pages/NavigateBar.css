@@ -24,17 +24,9 @@
   width: 100%;
   flex: 1;
 
+  color: rgb(var(--ev-fg-color));
+
   background-size: cover;
-  /* background-color: red;
-  background-blend-mode:lighten;
-  background-size: cover; */
-  
-  transform: translateY(3rem);
-  
-  filter: drop-shadow(0 -3rem rgb(var(--ev-fg-color)));
-  /* box-shadow: 0 10px 0 white inset; */
-  /* border-left: 30px solid transparent; */
-  /* filter: brightness(50%); */
 }
 
 .navigateBarIcon img {
@@ -53,5 +45,5 @@
 }
 
 .navigateBarItem.active .navigateBarIcon {
-  filter: drop-shadow(0 -3rem rgb(var(--theme-color)));
+  color: rgb(var(--theme-color));
 }

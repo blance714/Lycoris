@@ -1,15 +1,9 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import './TimeBar.css'
 
 let nowIdentifier = 0;
 //  {currentTime duration} {seekTime isSeeking} onSeekStart onSeekEnd onSeekMove
 function TimeBar(props) {
-  const touchHandler = e => {
-    for (let t of e.targetTouches) {
-      console.log(`${t.identifier} ${t.screenX} ${t.screenY}`)
-    }
-  }
-
   const barRef = useRef();
 
   const getTouch = touchList => {

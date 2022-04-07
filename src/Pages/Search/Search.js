@@ -6,8 +6,6 @@ import SearchContent from './SearchContent';
 import SearchResult from './SearchResult';
 
 import Agent from '../../Tools/Agent';
-import KeepAlive, { withActivation } from 'react-activation';
-import { useMatch } from 'react-router-dom';
 
 class Search extends React.Component {
   constructor(props) {

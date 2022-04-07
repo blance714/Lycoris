@@ -1,9 +1,8 @@
 import './App.css';
-import React, { createContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import NavigateBar from './Pages/NavigateBar';
 import Player from './Player/Player';
-import PlayListProvider from './Tools/PlayList';
 
 function App(props) {
   const [isFullMode, setIsFullMode] = useState(false);

@@ -26,7 +26,7 @@ const Agent = {
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
       },
-      body: type == 'POST' ? JSON.stringify(Object.assign(data, {cookie: cookie})) : undefined
+      body: type === 'POST' ? JSON.stringify(Object.assign(data, {cookie: cookie})) : undefined
     }).then((v) => v.json());
   },
 

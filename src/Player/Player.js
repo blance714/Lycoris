@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 
 import './Player.css'
 
-import smkni from './smkni.mp3';
-import defPic from './shinu.jpeg';
 import TimeBar from "./TimeBar";
 
 import PlayerButton from "./PlayerButton";
@@ -21,7 +19,8 @@ function Player(props) {
     currentTime: 0,
     duration: 0,
     paused: true,
-    isSeeking: false
+    isSeeking: false,
+    isWaiting: false
   });
 
   const [seekInfo, setSeekInfo] = useState({
@@ -29,21 +28,14 @@ function Player(props) {
     seekTime: 0
   });
 
-  const [songData, setSongData] = useState({
-    name: 'Untitled',
-    url: smkni,
-    artists: [{ name: 'Picon' }],
-    picUrl: defPic
-  });
-
   const { nowSong, nextSong, prevSong } = useContext(PlayListContent);
 
+  const audioRef = React.createRef();
   useEffect(() => {
     console.log(nowSong);
     audioRef.current.play();
   }, [nowSong]);
 
-  const audioRef = React.createRef();
   const switchPaused = () => {
     console.log(233);
     audioRef.current[audioInfo.paused ? 'play' : 'pause']();
@@ -132,8 +124,10 @@ function Player(props) {
         onAbort={e => console.log(e.type)}
         onLoad={e => console.log(e.type)}
         // onLoadStart={e => console.log(e.type)}
-        // ={e => console.log(e.type)}
-        onWaiting={e => console.log(e.type)}
+        // onWaiting={e => console.log(e.type)}
+        // onPlaying={e => console.log(e.type)}
+        onPlaying={e => setAudioInfo(v => ({...v, isWaiting: false}))}
+        onWaiting={e => setAudioInfo(v => ({...v, isWaiting: true}))}
       />
       {/* <div>{audioInfo.currentTime}</div> */}
       

@@ -1,5 +1,3 @@
-import { useMatch } from "react-router-dom";
-
 function SearchContent(props) {
   return (
     props.isFocusing ? (

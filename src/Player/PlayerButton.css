@@ -19,6 +19,11 @@
   }
 }
 
+@keyframes playerButtonIconWaiting {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .playerButtonIcon {
   width: 100%;
   height: 100%;
@@ -26,6 +31,10 @@
 
 .playerButton.active .playerButtonIcon {
   animation: playerButtonIconActive .6s;
+}
+
+.playerButton.waiting .playerButtonIcon {
+  animation: playerButtonIconWaiting 1.5s infinite linear;
 }
 
 @keyframes playerButtonBackgroundActive {
