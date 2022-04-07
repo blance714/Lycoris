@@ -9,12 +9,20 @@
 #page-wrapper {
   position: relative;
 
-  height: 400px;
+  height: 0;
   flex: 1;
   overflow: scroll;
 }
 
 #navigatorbar-wrapper {
   position: relative;
+  bottom: 0rem;
   z-index: 100;
+  background-color: white;
+
+  transition: bottom .5s;
+}
+
+.fullMode #navigatorbar-wrapper {
+  bottom: -3rem;
 }

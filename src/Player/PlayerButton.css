@@ -1,0 +1,65 @@
+.playerButton {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes playerButtonIconActive {
+  0% {
+    transform: scale(100%, 100%);
+  }
+
+  38% {
+    transform: scale(85%, 85%);
+  }
+
+  76% {
+    transform: scale(100%, 100%);
+  }
+}
+
+.playerButtonIcon {
+  width: 100%;
+  height: 100%;
+}
+
+.playerButton.active .playerButtonIcon {
+  animation: playerButtonIconActive .6s;
+}
+
+@keyframes playerButtonBackgroundActive {
+  0% {
+    transform: scale(160%, 160%);
+    background-color: transparent;
+  }
+  
+  25% {
+    transform: scale(140%, 140%);
+    background-color: gainsboro;
+  }
+  
+  100% {
+    transform: scale(160%, 160%);
+    background-color: transparent;
+  }
+}
+
+.playerButton::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 1/1;
+  /* height: 100%; */
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  /* z-index: -1; */
+  background-color: transparent;
+
+  transform: scale(140%, 140%);
+}
+
+.playerButton.active::before {
+  animation: playerButtonBackgroundActive .6s;
+}

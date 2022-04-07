@@ -1,22 +1,20 @@
-import logo from './logo.svg';
 import './App.css';
-import React from 'react';
+import React, { createContext, useState } from 'react';
 
-import Search from './Pages/Search/Search';
-import { Outlet, useLocation } from 'react-router-dom';
 import NavigateBar from './Pages/NavigateBar';
-import KeepAlive from 'react-activation';
-import { TransitionGroup } from 'react-transition-group';
-import { CSSTransition } from 'react-transition-group';
-import { SwitchTransition } from 'react-transition-group';
+import Player from './Player/Player';
+import PlayListProvider from './Tools/PlayList';
 
 function App(props) {
-  // const location = useLocation();
+  const [isFullMode, setIsFullMode] = useState(false);
+
   return (
-    <div id='app-wrapper'>
-        <div id='page-wrapper'>
-          {props.children}
-        </div>
+    <div id='app-wrapper' className={ isFullMode ? 'fullMode' : 'miniMode' }  
+      onContextMenu={(e) => e.preventDefault()}>
+      <div id='page-wrapper'>
+        {props.children}
+      </div>
+      <Player setIsFullMode={ setIsFullMode } />
       <div id='navigatorbar-wrapper'>
         <NavigateBar />
       </div>

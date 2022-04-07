@@ -11,6 +11,9 @@ import { TransitionGroup } from 'react-transition-group';
 import { CSSTransition } from 'react-transition-group';
 import KeepAlive, { AliveScope } from 'react-activation';
 import { createBrowserHistory } from 'history';
+import Player from './Player/Player';
+import Test from './Test';
+import PlayListProvider from './Tools/PlayList';
 
 function TestPage() {
   const location = useLocation();
@@ -21,8 +24,8 @@ function TestPage() {
   return (
     <>
     <TransitionGroup component={null} childFactory={child => React.cloneElement(child, {
-      classNames: navigationType == 'POP' ? 'pagesOut' : (noTransition ? '' : 'pagesIn'),
-      timeout: (navigationType == 'POP' || !noTransition) ? 300 : 0
+      classNames: navigationType === 'POP' ? 'pagesOut' : (noTransition ? '' : 'pagesIn'),
+      timeout: (navigationType === 'POP' || !noTransition) ? 300 : 0
     })}>
       <CSSTransition key={location.pathname} timeout={300}>
         <Routes location={location}>
@@ -43,8 +46,11 @@ function Root() {
   const location = useLocation();
   console.log(location.pathname);
   return (
+    // <Player />
     <App>
       <TestPage />
+      {/* <Player /> */}
+      {/* <Test /> */}
     </App>
   )
 }
@@ -52,9 +58,11 @@ function Root() {
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <AliveScope>
-        <Root />
-      </AliveScope>
+      <PlayListProvider>
+        <AliveScope>
+          <Root />
+        </AliveScope>
+      </PlayListProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );
