@@ -1,3 +1,5 @@
+//@ts-check
+
 import React, { useContext, useEffect, useState } from "react";
 
 import './Player.css'
@@ -28,7 +30,20 @@ function Player(props) {
     seekTime: 0
   });
 
-  const { nowSong, nextSong, prevSong } = useContext(PlayListContent);
+  const { 
+    songInfo: { nowSong }, 
+    songController: { nextSong, prevSong },
+    syncInfo
+  } = useContext(PlayListContent);
+
+  useEffect(() => {
+    if (syncInfo.isSync) audioRef.current.currentTime = 
+        ((new Date()).getTime() - syncInfo.time.syncTime) / 1000 + syncInfo.time.songTime;
+  }, [syncInfo.time]);
+
+  useEffect(() => {
+    audioRef.current[syncInfo.paused ? 'pause' : 'play']();
+  }, [syncInfo.paused])
 
   const audioRef = React.createRef();
   useEffect(() => {

@@ -15,12 +15,10 @@ function InputBox(props) {
   return (
     <div className='inputBox'>
       <img src={props.imgSrc} />
-      {props.type == 'search'
-        ? <form action='' onSubmit={(e) => {
-            e.preventDefault();
-            props.handleSubmit && props.handleSubmit(e);
-          }}>{input}</form>
-        : {input}}
+        <form action='' onSubmit={(e) => {
+          e.preventDefault();
+          props.handleSubmit && props.handleSubmit(e);
+        }}>{input}</form>
     </div>
   );
 }

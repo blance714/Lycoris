@@ -11,6 +11,7 @@ import { TransitionGroup } from 'react-transition-group';
 import { CSSTransition } from 'react-transition-group';
 import KeepAlive, { AliveScope } from 'react-activation';
 import PlayListProvider from './Tools/PlayList';
+import SyncSetting from './Pages/SyncSetting/SyncSetting';
 
 function TestPage() {
   const location = useLocation();
@@ -31,7 +32,7 @@ function TestPage() {
               <Search />
             </KeepAlive>
           } />
-          <Route path='/test' element={<SearchContent />} />
+          <Route path='/test' element={<SyncSetting />} />
         </Routes>
       </CSSTransition>
     </TransitionGroup>
