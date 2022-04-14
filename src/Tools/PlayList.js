@@ -40,11 +40,12 @@ function PlayListProvider(props) {
   //---Sync Controller---//
   let socketRef = useRef();
   const connectServer = () => {
-    socketRef.current = new Socket('ws://10.21.72.242:3001');
+    socketRef.current = new Socket('ws://106.52.27.169:3001');
     const socket = socketRef.current;
 
     socket.on('open', () => {
       setSyncInfo(p => ({...p, isConnected: true }));
+      setUpName('qaq');
       requestAvaliableRoom();
     });
     socket.on('close', () => {
@@ -73,10 +74,10 @@ function PlayListProvider(props) {
   };
 
   const setUpName = name => {
-    if (syncInfo.isConnected) {
+    // if (syncInfo.isConnected) {
       socketRef.current.emit('setUpName', name);
       setSyncInfo(p => ({...p, name: name }));
-    }
+    // }
   }
   const createRoom = () => {
     if (syncInfo.isConnected && syncInfo.name) {
@@ -84,8 +85,11 @@ function PlayListProvider(props) {
     }
   }
   const requestAvaliableRoom = () => socketRef.current.emit('requestAvaliableRoom');
-  const joinRoom = ID => socketRef.current.emit('joinRoom', ID);
-  const exitRoom = () => socketRef.current.emit('exitRoom');
+  const joinRoom = ID => !syncInfo.isSync && socketRef.current.emit('joinRoom', ID);
+  const exitRoom = () => {
+    setSyncInfo(p => ({...p, isSync: false }));
+    socketRef.current.emit('exitRoom');
+  }
   const syncPlay = (play, songTime) => socketRef.current.emit(play ? 'play': 'pause', 
     { time: { syncTime: (new Date).getTime(), songTime: songTime } }
   );
@@ -113,8 +117,14 @@ function PlayListProvider(props) {
     else addSongRemote(song, now);
   }
 
-  const nextSong = () => setIterator(v => v < playList.length - 1 ? v + 1 : v);
-  const prevSong = () => setIterator(v => v > 0 ? v - 1 : v);
+  const nextSong = () => {
+    if (!syncInfo.isSync) setIterator(v => v < playList.length - 1 ? v + 1 : v);
+    else socketRef.current.emit('nextSong');
+  }
+  const prevSong = () => {
+    if (!syncInfo.isSync) setIterator(v => v > 0 ? v - 1 : v);
+    else socketRef.current.emit('prevSong');
+  }
 
   const nowSong = playList[iterator];
 

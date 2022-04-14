@@ -8,6 +8,8 @@ function Socket(url) {
   const target = new EventTarget();
   const ws = new WebSocket(url);
 
+  this.close = ws.close.bind(ws);
+
   this.on = (type, callback) =>
     target.addEventListener(type, event =>
       callback.call(this, event.detail));

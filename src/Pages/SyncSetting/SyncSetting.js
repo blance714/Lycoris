@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PlayListContent } from "../../Tools/PlayList";
 import InputBox from "../../Utilities/InputBox";
 import TextButton from "../../Utilities/TextButton";
@@ -12,7 +12,12 @@ function SyncSetting(props) {
     }
   } = useContext(PlayListContent);
 
-  // const [submitName, setSubmitName] = useState('');
+  useEffect(() => {
+    const ID = setInterval(() => {
+      requestAvaliableRoom();
+    }, 2000);
+    return () => clearInterval(ID);
+  })
 
   return (
     <div id="syncsetting-wrapper">
@@ -21,10 +26,10 @@ function SyncSetting(props) {
           Connect Server
         </TextButton>
       )}
-      <div id='changename-wrapper'>
+      {/* <div id='changename-wrapper'>
         <div>在这里改名哦(´▽｀)ノ♪</div>
         <InputBox placeHolder={ name } handleSubmit={e => setUpName(e.target.input.value)} />
-      </div>
+      </div> */}
       <ul id='roomlist'>
         { avaliableRooms.map(room => (
           <li key={ room.ID } onClick={e => joinRoom(room.ID)}>

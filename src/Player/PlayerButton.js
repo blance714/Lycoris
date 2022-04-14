@@ -8,8 +8,8 @@ import './PlayerButton.css';
 function PlayerButton(props) {
   let nowIconProp = {};
 
-  if (props.type === 'forward') nowIconProp = {icon: playForward};
-  else if (props.type === 'back') nowIconProp = {icon: playBack};
+  if (props.type === 'forward') nowIconProp = { icon: playForward };
+  else if (props.type === 'back') nowIconProp = { icon: playBack };
   else if (props.type === 'play') nowIconProp = {
     icon: props.audioInfo 
       ? (props.audioInfo.isWaiting
