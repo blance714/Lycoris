@@ -27,7 +27,7 @@ class SearchItem extends React.Component {
     let p = Agent.getSongUrl(this.props.data.id)
       .then(v => url = v);
     Promise.all([p, this.getPicPromise])
-      .then(() => this.context.addSong({
+      .then(() => this.context.songController.addSong({
         name: this.props.data.name,
         url: url,
         artists: this.props.data.artists,

@@ -21,18 +21,18 @@ function TimeBar(props) {
 
   
   const touchStartHandler = e => {
-    console.log(e.type);
+    // console.log(e.type);
     const touch = e.changedTouches[0];
     nowIdentifier = touch.identifier;
-    console.log(`start ${nowIdentifier}`);
+    // console.log(`start ${nowIdentifier}`);
     props.onSeekStart(getSeekTime(touch));
   }
   
   const touchMoveHandler = (e, isEnd) => {
-    console.log(e.type);
-    console.log(e.changedTouches);
+    // console.log(e.type);
+    // console.log(e.changedTouches);
     const touch = getTouch(e.changedTouches);
-    console.log(touch);
+    // console.log(touch); 
     if (props.seekInfo.isSeeking && touch) {
       const seekTime = getSeekTime(touch);
       console.log(`move ${nowIdentifier} ${seekTime}`);

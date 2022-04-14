@@ -6,13 +6,7 @@ import ReconnectingWebSocket from "reconnecting-websocket";
  */
 function Socket(url) {
   const target = new EventTarget();
-  const ws = new ReconnectingWebSocket(url, [], {
-    connectionTimeout: 1000,
-    maxReconnectionDelay: 1000,
-    maxRetries: 10,
-    minUptime: 1000,
-    debug: true
-  });
+  const ws = new WebSocket(url);
 
   this.on = (type, callback) =>
     target.addEventListener(type, event =>
@@ -26,6 +20,7 @@ function Socket(url) {
 
   const parseMessage = (data) => {
     const json = JSON.parse(data);
+    console.log(json);
     target.dispatchEvent(new CustomEvent(json.type, {
       detail: json.data
     }));

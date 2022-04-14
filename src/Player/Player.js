@@ -1,5 +1,3 @@
-//@ts-check
-
 import React, { useContext, useEffect, useState } from "react";
 
 import './Player.css'
@@ -18,6 +16,7 @@ function timeStr(sec) {
 
 function Player(props) {
   const [audioInfo, setAudioInfo] = useState({
+    hasPlayed: false,
     currentTime: 0,
     duration: 0,
     paused: true,
@@ -33,26 +32,38 @@ function Player(props) {
   const { 
     songInfo: { nowSong }, 
     songController: { nextSong, prevSong },
-    syncInfo
+    syncInfo,
+    syncController: { syncPlay, syncSeek }
   } = useContext(PlayListContent);
 
   useEffect(() => {
-    if (syncInfo.isSync) audioRef.current.currentTime = 
+    console.log(`${syncInfo.isSync} ` + ((new Date()).getTime() - syncInfo.time.syncTime) / 1000);
+    if (syncInfo.isSync && audioInfo.hasPlayed) audioRef.current.currentTime = 
         ((new Date()).getTime() - syncInfo.time.syncTime) / 1000 + syncInfo.time.songTime;
   }, [syncInfo.time]);
 
   useEffect(() => {
-    audioRef.current[syncInfo.paused ? 'pause' : 'play']();
+    if (syncInfo.paused)  audioRef.current.pause();
+    else audioRef.current.play().catch(e => console.log(e));
+    // audioRef.current[syncInfo.paused ? 'pause' : 'play']();
   }, [syncInfo.paused])
 
   const audioRef = React.createRef();
   useEffect(() => {
     console.log(nowSong);
-    audioRef.current.play();
+    // audioRef.current.play();
   }, [nowSong]);
 
+  const [nowTime, setNowTime] = useState(0);
+  useEffect(() => {
+    const ID = setInterval(() => {
+      setNowTime(new Date().getTime());
+    }, 100);
+    return () => clearInterval(ID);
+  });
+
   const switchPaused = () => {
-    console.log(233);
+    if (syncInfo.isSync) syncPlay(audioInfo.paused, audioInfo.currentTime);
     audioRef.current[audioInfo.paused ? 'play' : 'pause']();
   }
 
@@ -65,7 +76,8 @@ function Player(props) {
       <div className="songTitleWrapper">
         {/* <img className="songTitleImage" src={ songData.picUrl }/> */}
         <div className="songTitleNameWrapper">
-          <span className="songTitleName">{ nowSong.name }</span>
+          {/* <span className="songTitleName">{ nowSong.name }</span> */}
+          <span className="songTitleName">{ nowTime }</span>
           <span className="artistName">{ nowSong.artists[0].name }</span>
         </div>
         <div className="songTitleButton">
@@ -82,7 +94,9 @@ function Player(props) {
           setSeekInfo(p => ({...p,
             isSeeking: false, seekTime: v
           }));
+          console.log('onSeekEnd ' + v);
           audioRef.current.currentTime = v;
+          if (syncInfo.isSync)  syncSeek(v);
           setAudioInfo(p => ({...p, isSeeking: true}));
         }}
       />
@@ -130,9 +144,12 @@ function Player(props) {
   return (
     <div id='player-wrapper'>
       <audio ref={ audioRef } src={ nowSong.url }
-        onTimeUpdate={e => setAudioInfo(v => ({...v, currentTime: e.target.currentTime}))} 
+        onTimeUpdate={e => {
+          console.log(`onTimeUpdate ${e.target.currentTime}`);
+          setAudioInfo(v => ({...v, currentTime: e.target.currentTime}));
+        }}
         onPause={e => setAudioInfo(v => ({...v, paused: e.target.paused}))}
-        onPlay={e => setAudioInfo(v => ({...v, paused: e.target.paused}))}
+        onPlay={e => setAudioInfo(v => ({...v, paused: e.target.paused, hasPlayed: true}))}
         onLoadStart={e => setAudioInfo(v => ({...v, paused: e.target.paused}))}
         onDurationChange={e => setAudioInfo(v => ({...v, duration: e.target.duration}))}
         onSeeked={e => setAudioInfo(v => ({...v, isSeeking: false}))}

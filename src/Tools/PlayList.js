@@ -40,17 +40,29 @@ function PlayListProvider(props) {
   //---Sync Controller---//
   let socketRef = useRef();
   const connectServer = () => {
-    socketRef.current = new Socket('ws://localhost:3001');
+    socketRef.current = new Socket('ws://10.21.72.242:3001');
     const socket = socketRef.current;
 
-    socket.on('open', () => setSyncInfo(p => ({...p, isConnected: true })));
+    socket.on('open', () => {
+      setSyncInfo(p => ({...p, isConnected: true }));
+      requestAvaliableRoom();
+    });
+    socket.on('close', () => {
+      setSyncInfo(p => ({...p, isConnected: false, isSync: false }));
+    });
     socket.on('roomConnectionRefused', info => console.log(info));
-    socket.on('roomConnected', ID => setSyncInfo(p => ({...p, roomID: ID, isSync: true })));
+    socket.on('roomConnected', ID => {
+      setSyncInfo(p => ({...p, roomID: ID, isSync: true }));
+      // requestAvaliableRoom();
+    });
     socket.on('avaliableRooms', rooms => setSyncInfo(p => ({...p, avaliableRooms: rooms })));
 
     socket.on('sync', data => {
-      setPlayList(data.list);
-      setSyncInfo(p => ({...p, time: data.time }));
+      data.list && setPlayList(data.list);
+      data.iterator && setIterator(data.iterator);
+      data.time && setSyncInfo(p => ({...p, time: data.time }));
+      data.paused && setSyncInfo(p => ({...p, paused: data.paused}));
+      socket.emit('syncComplete');
     });
     socket.on('play', data => {
       setSyncInfo(p => ({...p, time: data.time, paused: false }));
@@ -68,12 +80,18 @@ function PlayListProvider(props) {
   }
   const createRoom = () => {
     if (syncInfo.isConnected && syncInfo.name) {
-      socketRef.current.emit('createRoom', playList);
+      socketRef.current.emit('createRoom', { list: playList, iterator: iterator });
     }
   }
-  const requestAvaliableRoom = () => socketRef.currentemit('requestAvaliableRoom');
+  const requestAvaliableRoom = () => socketRef.current.emit('requestAvaliableRoom');
   const joinRoom = ID => socketRef.current.emit('joinRoom', ID);
   const exitRoom = () => socketRef.current.emit('exitRoom');
+  const syncPlay = (play, songTime) => socketRef.current.emit(play ? 'play': 'pause', 
+    { time: { syncTime: (new Date).getTime(), songTime: songTime } }
+  );
+  const syncSeek = songTime => socketRef.current.emit('syncSeek', {
+    time: { syncTime: (new Date).getTime(), songTime: songTime }
+  });
 
   //---List Controller---//
   /**
@@ -87,8 +105,12 @@ function PlayListProvider(props) {
     if (now)  setPlayList(list => list.slice(0, iterator).concat(song, ...list.slice(iterator)));
     else  setPlayList(list => list.concat(song));
   }
+  const addSongRemote = (song, now) => {
+    socketRef.current.emit('addSong', { song: song, now: now });
+  }
   const addSong = (song, now) => {
-
+    if (!syncInfo.isSync) addSongLocal(song, now);
+    else addSongRemote(song, now);
   }
 
   const nextSong = () => setIterator(v => v < playList.length - 1 ? v + 1 : v);
@@ -103,7 +125,8 @@ function PlayListProvider(props) {
       syncInfo,
       syncController: { 
         connectServer, setUpName, createRoom, 
-        requestAvaliableRoom, joinRoom, exitRoom
+        requestAvaliableRoom, joinRoom, exitRoom,
+        syncPlay, syncSeek
       }
     }}>
       {props.children}
