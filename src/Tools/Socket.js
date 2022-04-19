@@ -22,7 +22,7 @@ function Socket(url) {
 
   const parseMessage = (data) => {
     const json = JSON.parse(data);
-    console.log(json);
+    if (json.type != 'avaliableRooms')  console.log(json);
     target.dispatchEvent(new CustomEvent(json.type, {
       detail: json.data
     }));

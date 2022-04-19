@@ -21,7 +21,8 @@ function Player(props) {
     duration: 0,
     paused: true,
     isSeeking: false,
-    isWaiting: false
+    isWaiting: false,
+    readyState: 0
   });
 
   const [seekInfo, setSeekInfo] = useState({
@@ -30,37 +31,54 @@ function Player(props) {
   });
 
   const { 
-    songInfo: { nowSong }, 
+    songInfo: { nowSong, iterator, playList }, 
     songController: { nextSong, prevSong },
     syncInfo,
     syncController: { syncPlay, syncSeek }
   } = useContext(PlayListContent);
 
+  const audioRef = React.useRef();
+
+  const [syncList, setSyncList] = useState([]);
+
   useEffect(() => {
     console.log(nowSong);
+    playList[iterator] && console.log(`${playList[iterator].name} ${iterator}`);
+    // !syncInfo.isSync && audioRef.current.play();
   }, [nowSong]);
 
   useEffect(() => {
-    if (syncInfo.paused)  audioRef.current.pause();
-    else audioRef.current.play().catch(e => console.log(e));
-    console.log(audioRef.current.readyState);
-    // audioRef.current[syncInfo.paused ? 'pause' : 'play']();
-  }, [syncInfo.paused]);
-  
-  useEffect(() => {
-    if (audioInfo.paused != syncInfo.paused) {
-      if (syncInfo.paused)  audioRef.current.pause();
-      else audioRef.current.play().catch(e => console.log(e));
-    }
-  }, [syncInfo.isSync]);
+    console.log(`iterator ${iterator}`);
+  }, [iterator]);
 
   useEffect(() => {
-    console.log(`${syncInfo.isSync} ` + ((new Date()).getTime() - syncInfo.time.syncTime) / 1000);
-    if (syncInfo.isSync && audioInfo.hasPlayed) audioRef.current.currentTime = 
-      ((new Date()).getTime() - syncInfo.time.syncTime) / 1000 + syncInfo.time.songTime;
-  }, [syncInfo.time]);
+    setSyncList(p => p.concat({ name: "play", minState: 1, run: () => {
+      Promise.resolve(audioRef.current[syncInfo.paused ? 'pause' : 'play']())
+        .catch(console.log);
+    }}));
+  }, [syncInfo.paused, syncInfo.isSync]);
   
-  const audioRef = React.createRef();
+  // useEffect(() => {
+  //   setSyncList(p => p.concat({ minState: 3, run: () => {
+  //     Promise.resolve(audioRef.current[syncInfo.pasued ? 'pause' : 'play']())
+  //       .catch(console.log);
+  //   }}))
+  // }, [syncInfo.isSync]);
+  
+  useEffect(() => {
+    setSyncList(p => p.concat({ name: "time", minState: 1, run: () => {
+      console.log(`${syncInfo.isSync} ` + ((new Date()).getTime() - syncInfo.time.syncTime) / 1000);
+      if (syncInfo.isSync && audioInfo.hasPlayed) audioRef.current.currentTime = 
+      ((new Date()).getTime() - syncInfo.time.syncTime) / 1000 + syncInfo.time.songTime;
+    }}));
+  }, [syncInfo.time]);
+
+  useEffect(() => {
+    while (syncList.length && syncList[0].minState <= audioInfo.readyState) {
+      console.log(syncList[0].name);
+      syncList.shift().run();
+    }
+  }, [syncList, audioInfo.readyState])
   
   const [nowTime, setNowTime] = useState(0);
   useEffect(() => {
@@ -69,11 +87,14 @@ function Player(props) {
     }, 100);
     return () => clearInterval(ID);
   });
+
+  useEffect(() => {
+    console.log(`readyState ${audioInfo.readyState}`);
+  }, [audioInfo.readyState]);
   
   const switchPaused = () => {
     if (syncInfo.isSync) syncPlay(audioInfo.paused, audioInfo.currentTime);
     audioRef.current[audioInfo.paused ? 'play' : 'pause']();
-    console.log(audioRef.current.readyState);
   }
 
   const seekOrCurTime = seekInfo.isSeeking ? seekInfo.seekTime : audioInfo.currentTime;
@@ -85,8 +106,8 @@ function Player(props) {
       <div className="songTitleWrapper">
         {/* <img className="songTitleImage" src={ songData.picUrl }/> */}
         <div className="songTitleNameWrapper">
-          {/* <span className="songTitleName">{ nowSong.name }</span> */}
-          <span className="songTitleName">{ nowTime }</span>
+          <span className="songTitleName">{ nowSong.name }</span>
+          {/* <span className="songTitleName">{ nowTime }</span> */}
           <span className="artistName">{ nowSong.artists[0].name }</span>
         </div>
         <div className="songTitleButton">
@@ -150,26 +171,24 @@ function Player(props) {
 
   return (
     <div id='player-wrapper'>
-      <audio ref={ audioRef } src={ nowSong.url }
+      <audio ref={ audioRef } src={ nowSong.url } preload="auto"
         onTimeUpdate={e => {
-          console.log(`onTimeUpdate ${e.target.currentTime}`);
+          // console.log(`onTimeUpdate ${e.target.currentTime}`);
           setAudioInfo(v => ({...v, currentTime: e.target.currentTime}));
         }}
         onPause={e => setAudioInfo(v => ({...v, paused: e.target.paused}))}
-        onPlay={e => setAudioInfo(v => ({...v, paused: e.target.paused, hasPlayed: true}))}
+        onPlay={e => setAudioInfo(v => ({...v, paused: e.target.paused, hasPlayed: true }))}
         onLoadStart={e => setAudioInfo(v => ({...v, paused: e.target.paused}))}
         onDurationChange={e => setAudioInfo(v => ({...v, duration: e.target.duration}))}
-        onSeeked={e => setAudioInfo(v => ({...v, isSeeking: false}))}
-        onAbort={e => console.log(`${e.type} ${e.target.readyState} ${e.target.paused}`)}
-        onLoad={e => console.log(e.type)}
-        // onLoadStart={e => console.log(e.type)}
-        // onWaiting={e => console.log(e.type)}
-        // onPlaying={e => console.log(e.type)}
-        onPlaying={e => setAudioInfo(v => ({...v, isWaiting: false}))}
-        onWaiting={e => {
-          console.log('onWaiting');
-          setAudioInfo(v => ({...v, isWaiting: true}));
-        }}
+        onSeeked={e => setAudioInfo(v => ({...v, isSeeking: false }))}
+        
+        // onEmptied={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState}))}
+        onEmptied={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState}))}
+        onWaiting={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState, isWaiting: true }))}
+        onLoadedMetadata={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState}))}
+        onLoadedData={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState, isWaiting: false }))}
+        onCanPlay={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState}))}
+        onCanPlayThrough={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState}))}
       />
       {/* <div>{audioInfo.currentTime}</div> */}
       

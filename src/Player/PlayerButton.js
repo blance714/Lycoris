@@ -8,11 +8,14 @@ import './PlayerButton.css';
 function PlayerButton(props) {
   let nowIconProp = {};
 
+  const isWaiting = props.type === 'play' 
+    && props.audioInfo.readyState < (props.audioInfo.paused ? 1 : 2);
+
   if (props.type === 'forward') nowIconProp = { icon: playForward };
   else if (props.type === 'back') nowIconProp = { icon: playBack };
   else if (props.type === 'play') nowIconProp = {
     icon: props.audioInfo 
-      ? (props.audioInfo.isWaiting
+      ? (isWaiting
         ? reloadCircle
         : (props.audioInfo.paused ? play : pause))
       : play
@@ -24,7 +27,7 @@ function PlayerButton(props) {
   return (
     <div className={classNames('playerButton', {
       active: isActived,
-      waiting: props.type === 'play' && props.audioInfo.isWaiting
+      waiting: props.type === 'play' && isWaiting
     })}
     onClick={e => {
       e.stopPropagation();

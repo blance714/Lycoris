@@ -40,7 +40,7 @@ function PlayListProvider(props) {
   //---Sync Controller---//
   let socketRef = useRef();
   const connectServer = () => {
-    socketRef.current = new Socket('ws://106.52.27.169:3001');
+    socketRef.current = new Socket('ws://10.13.7.123:3001');
     const socket = socketRef.current;
 
     socket.on('open', () => {
@@ -54,15 +54,16 @@ function PlayListProvider(props) {
     socket.on('roomConnectionRefused', info => console.log(info));
     socket.on('roomConnected', ID => {
       setSyncInfo(p => ({...p, roomID: ID, isSync: true }));
-      // requestAvaliableRoom();
+      console.log(`roomConnected ${ID}`);
+      requestAvaliableRoom();
     });
     socket.on('avaliableRooms', rooms => setSyncInfo(p => ({...p, avaliableRooms: rooms })));
 
     socket.on('sync', data => {
-      data.list && setPlayList(data.list);
-      data.iterator && setIterator(data.iterator);
-      data.time && setSyncInfo(p => ({...p, time: data.time }));
-      data.paused && setSyncInfo(p => ({...p, paused: data.paused}));
+      'list' in data && setPlayList(data.list);
+      'iterator' in data && setIterator(data.iterator);
+      'time' in data && setSyncInfo(p => ({...p, time: data.time }));
+      'paused' in data && setSyncInfo(p => ({...p, paused: data.paused}));
       socket.emit('syncComplete');
     });
     socket.on('play', data => {
@@ -84,7 +85,7 @@ function PlayListProvider(props) {
       socketRef.current.emit('createRoom', { list: playList, iterator: iterator });
     }
   }
-  const requestAvaliableRoom = () => socketRef.current.emit('requestAvaliableRoom');
+  const requestAvaliableRoom = () => syncInfo.isConnected && socketRef.current.emit('requestAvaliableRoom');
   const joinRoom = ID => !syncInfo.isSync && socketRef.current.emit('joinRoom', ID);
   const exitRoom = () => {
     setSyncInfo(p => ({...p, isSync: false }));
@@ -118,6 +119,7 @@ function PlayListProvider(props) {
   }
 
   const nextSong = () => {
+    console.log(syncInfo);
     if (!syncInfo.isSync) setIterator(v => v < playList.length - 1 ? v + 1 : v);
     else socketRef.current.emit('nextSong');
   }
