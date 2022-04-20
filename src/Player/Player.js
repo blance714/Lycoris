@@ -39,7 +39,7 @@ function Player(props) {
     songInfo: { nowSong, iterator, playList }, 
     songController: { nextSong, prevSong },
     syncInfo,
-    syncController: { syncPlay, syncSeek }
+    syncController: { syncPlay, syncSeek, finishedPlay }
   } = useContext(PlayListContent);
 
   const audioRef = React.useRef();
@@ -74,7 +74,7 @@ function Player(props) {
     setSyncList(p => p.concat({ name: "time", minState: 1, run: () => {
       console.log(`${syncInfo.isSync} ` + ((new Date()).getTime() - syncInfo.time.syncTime) / 1000);
       if (syncInfo.isSync && audioInfo.hasPlayed) audioRef.current.currentTime = 
-      ((new Date()).getTime() - syncInfo.time.syncTime) / 1000 + syncInfo.time.songTime;
+        ((new Date()).getTime() - syncInfo.time.syncTime) / 1000 + syncInfo.time.songTime;
     }}));
   }, [syncInfo.time]);
 
@@ -84,14 +84,6 @@ function Player(props) {
       syncList.shift().run();
     }
   }, [syncList, audioInfo.readyState])
-  
-  const [nowTime, setNowTime] = useState(0);
-  useEffect(() => {
-    const ID = setInterval(() => {
-      setNowTime(new Date().getTime());
-    }, 100);
-    return () => clearInterval(ID);
-  });
 
   useEffect(() => {
     console.log(`readyState ${audioInfo.readyState}`);
@@ -107,8 +99,8 @@ function Player(props) {
   const [panelCategory, setPanelCategory] = useState('none');
   
   const FullPlayer = (
-    <CSSTransition in={ panelCategory !== 'none' } timeout={500} classNames="showPanel">
-      <div id='full-player' className={ classNames({ isPlaying: !audioInfo.paused }) }
+    <CSSTransition in={ panelCategory !== 'none' } timeout={500} classNames="showPanel" appear >
+      <div id='full-player' className={ classNames({ isPlaying: !audioInfo.paused, showPanel: panelCategory !== 'none' }) }
         onClick={e => props.setIsFullMode(false)}>
         <img src={ nowSong.picUrl } />
         <div className="songTitleWrapper">
@@ -198,7 +190,7 @@ function Player(props) {
         onCanPlayThrough={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState}))}
 
         onEnded={e => {
-          if (syncInfo.isSync)  {}  //TODO sync 'finished play'
+          if (syncInfo.isSync)  finishedPlay()  //TODO sync 'finished play'
           else nextSong();
         }}
       />

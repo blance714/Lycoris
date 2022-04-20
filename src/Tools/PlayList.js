@@ -54,7 +54,7 @@ function PlayListProvider(props) {
   //---Sync Controller---//
   let socketRef = useRef();
   const connectServer = () => {
-    socketRef.current = new Socket('ws://10.13.7.123:3001');
+    socketRef.current = new Socket('wss://balanca.cn:3001/');
     const socket = socketRef.current;
 
     socket.on('open', () => {
@@ -111,6 +111,7 @@ function PlayListProvider(props) {
   const syncSeek = songTime => socketRef.current.emit('syncSeek', {
     time: { syncTime: (new Date).getTime(), songTime: songTime }
   });
+  const finishedPlay = () => socketRef.current.emit('finishedPlay');
 
   //---List Controller---//
   /**
@@ -157,7 +158,7 @@ function PlayListProvider(props) {
       syncController: { 
         connectServer, setUpName, createRoom, 
         requestAvaliableRoom, joinRoom, exitRoom,
-        syncPlay, syncSeek
+        syncPlay, syncSeek, finishedPlay
       }
     }}>
       {props.children}

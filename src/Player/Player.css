@@ -96,6 +96,7 @@
   transition: width .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+#full-player.showPanel > img,
 #full-player.showPanel-enter > img, 
 #full-player.showPanel-enter-active > img,
 #full-player.showPanel-enter-done > img,
@@ -123,6 +124,11 @@
   /* width: 3.5rem; */
 }
 
+#full-player.showPanel.showPanel-enter-active .songTitleImage {
+  display: none;
+}
+
+#full-player.showPanel .songTitleImage,
 #full-player.showPanel-enter-done .songTitleImage {
   display: block;
 }
@@ -159,8 +165,7 @@
   transition: flex-grow .5s;
 }
 
-#full-player.showPanel-enter-active .panelWrapper,
-#full-player.showPanel-enter-done .panelWrapper {
+#full-player.showPanel .panelWrapper {
   flex-grow: 1;
 }
 
