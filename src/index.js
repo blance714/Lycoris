@@ -12,6 +12,7 @@ import { CSSTransition } from 'react-transition-group';
 import KeepAlive, { AliveScope } from 'react-activation';
 import PlayListProvider from './Tools/PlayList';
 import SyncSetting from './Pages/SyncSetting/SyncSetting';
+import PlayerPlayList from './Player/PlayerPlayList';
 
 function TestPage() {
   const location = useLocation();
@@ -59,6 +60,7 @@ createRoot(document.getElementById('root')).render(
       <PlayListProvider>
         <AliveScope>
           <Root />
+          {/* <PlayerPlayList /> */}
         </AliveScope>
       </PlayListProvider>
     </BrowserRouter>

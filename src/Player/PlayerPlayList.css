@@ -1,0 +1,48 @@
+#player-playlist {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  overflow: scroll;
+}
+
+.playListSong {
+  height: 2.8rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin-bottom: .4rem;
+}
+
+.songImage {
+  display: inline-block;
+  /* box-sizing: border-box; */
+  width: 2.8rem;
+  height: 100%;
+  object-fit: cover;
+  
+  border-radius: .2rem;
+  margin-right: .8rem;
+}
+
+#player-playlist .songNameWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 0;
+  flex-grow: 1;
+}
+
+#player-playlist .songNameWrapper > * {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.songName {
+  font-size: .9rem;
+}
+
+.artistName {
+  font-size: .75rem;
+  text-overflow: ellipsis;
+  color: gray;
+}

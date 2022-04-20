@@ -1,24 +1,38 @@
+import { createContext, useEffect, useRef, useState } from 'react';
+import Socket from './Socket';
+
+import shiro from '../Player/shiro.mp3';
+import shiroPic from '../Player/shiro.jpeg';
 import smkni from '../Player/smkni.mp3';
 import defPic from '../Player/shinu.jpeg';
 import kanade from '../Player/kanade.mp3';
 import kanaPic from '../Player/kanade.jpeg';
-import { createContext, useEffect, useRef, useState } from 'react';
-import Socket from './Socket';
+
+function genUUID() { return Math.round(Math.random() * 1000000); }
 
 const PlayListContent = createContext();
 function PlayListProvider(props) {
   const [playList, setPlayList] = useState([
     {
-      name: 'Untitled',
+      name: '白ゆき オルゴールver',
+      url: shiro,
+      artists: [{ name: 'n-buna' }],
+      picUrl: shiroPic,
+      uuid: genUUID()
+    },
+    {
+      name: '死ぬにはいい日だった',
       url: smkni,
       artists: [{ name: 'Picon' }],
-      picUrl: defPic
+      picUrl: defPic,
+      uuid: genUUID()
     },
     {
       name: 'カナデトモスソラ',
       url: kanade,
       artists: [{ name: 'Sasanomaly' }],
-      picUrl: kanaPic
+      picUrl: kanaPic,
+      uuid: genUUID()
     }
   ]);
 
@@ -106,6 +120,7 @@ function PlayListProvider(props) {
    */
   const addSongLocal = (song, now) => {
     console.log('addSongLocal');
+    song.uuid = genUUID();
     console.log(song);
     if (now)  setPlayList(list => list.slice(0, iterator).concat(song, ...list.slice(iterator)));
     else  setPlayList(list => list.concat(song));
@@ -127,13 +142,17 @@ function PlayListProvider(props) {
     if (!syncInfo.isSync) setIterator(v => v > 0 ? v - 1 : v);
     else socketRef.current.emit('prevSong');
   }
+  const changeSong = it => {
+    if (!syncInfo.isSync) setIterator(it);
+    else socketRef.current.emit('changeSong', it);
+  }
 
   const nowSong = playList[iterator];
 
   return (
     <PlayListContent.Provider value={{
       songInfo: { playList, iterator, nowSong },
-      songController: { addSong, nextSong, prevSong }, 
+      songController: { addSong, nextSong, prevSong, changeSong }, 
       syncInfo,
       syncController: { 
         connectServer, setUpName, createRoom, 

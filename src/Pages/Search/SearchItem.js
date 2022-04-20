@@ -32,7 +32,7 @@ class SearchItem extends React.Component {
         url: url,
         artists: this.props.data.artists,
         picUrl: this.state.imgSrc
-      }, true));
+      }, false));
   }
 
 

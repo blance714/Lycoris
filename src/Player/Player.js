@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 
 import './Player.css'
 
@@ -7,6 +7,11 @@ import TimeBar from "./TimeBar";
 import PlayerButton from "./PlayerButton";
 import { IonIcon } from "@ionic/react";
 import { PlayListContent } from "../Tools/PlayList";
+import classNames from "classnames";
+import PlayerPlayList from "./PlayerPlayList";
+import { CSSTransition } from "react-transition-group";
+import { list } from "ionicons/icons";
+import PlayerPanelButton from "./PlayerPanelButton";
 
 function timeStr(sec) {
   let rsec = Math.abs(Math.round(sec));
@@ -44,7 +49,7 @@ function Player(props) {
   useEffect(() => {
     console.log(nowSong);
     playList[iterator] && console.log(`${playList[iterator].name} ${iterator}`);
-    // !syncInfo.isSync && audioRef.current.play();
+    !syncInfo.isSync && audioRef.current.play();
   }, [nowSong]);
 
   useEffect(() => {
@@ -99,59 +104,61 @@ function Player(props) {
 
   const seekOrCurTime = seekInfo.isSeeking ? seekInfo.seekTime : audioInfo.currentTime;
 
+  const [panelCategory, setPanelCategory] = useState('none');
+  
   const FullPlayer = (
-    <div id='full-player' className={ audioInfo.paused ? '' : 'isPlaying' }
-      onClick={e => props.setIsFullMode(false)}>
-      <img src={ nowSong.picUrl } />
-      <div className="songTitleWrapper">
-        {/* <img className="songTitleImage" src={ songData.picUrl }/> */}
-        <div className="songTitleNameWrapper">
-          <span className="songTitleName">{ nowSong.name }</span>
-          {/* <span className="songTitleName">{ nowTime }</span> */}
-          <span className="artistName">{ nowSong.artists[0].name }</span>
+    <CSSTransition in={ panelCategory !== 'none' } timeout={500} classNames="showPanel">
+      <div id='full-player' className={ classNames({ isPlaying: !audioInfo.paused }) }
+        onClick={e => props.setIsFullMode(false)}>
+        <img src={ nowSong.picUrl } />
+        <div className="songTitleWrapper">
+          <img className="songTitleImage" src={ nowSong.picUrl }/>
+          <div className="songTitleNameWrapper">
+            <span className="songTitleName">{ nowSong.name }</span>
+            <span className="artistName">{ nowSong.artists[0].name }</span>
+          </div>
+          <div className="songTitleButton">
+            <PlayerButton type="back" />
+          </div>
         </div>
-        <div className="songTitleButton">
-          <PlayerButton type="back" />
+        <div className="panelWrapper">
+          <PlayerPlayList />
+        </div>
+        <TimeBar audioInfo={ audioInfo } seekInfo={ seekInfo }
+          onSeekStart={v => setSeekInfo(p => ({...p,
+            isSeeking: true, seekTime: v
+          }))}
+          onSeekMove={v => setSeekInfo(p => ({...p, seekTime: v}))}
+          onSeekEnd={v => {
+            setSeekInfo(p => ({...p,
+              isSeeking: false, seekTime: v
+            }));
+            console.log('onSeekEnd ' + v);
+            audioRef.current.currentTime = v;
+            if (syncInfo.isSync)  syncSeek(v);
+            setAudioInfo(p => ({...p, isSeeking: true}));
+          }}
+        />
+        <div className="playerTimeWrapper">
+          <span className="playedTime">{ timeStr(seekOrCurTime) }</span>
+          <span className="remainedTime">{ timeStr(seekOrCurTime - audioInfo.duration) }</span>
+        </div>
+        <div className="playerButtonListWrapper">
+          <div className="playerButtonWrapper">
+            <PlayerButton type="back" onClick={ prevSong } />
+          </div>
+          <div className="playerButtonWrapper">
+            <PlayerButton type="play" audioInfo={ audioInfo } onClick={ switchPaused } />
+          </div>
+          <div className="playerButtonWrapper">
+            <PlayerButton type="forward" onClick={ nextSong } />
+          </div>
+        </div>
+        <div className="playerPanelButtonListWrapper">
+            <PlayerPanelButton type="list" panelCategory={[panelCategory, setPanelCategory]} />
         </div>
       </div>
-      <div className="panelWrapper"></div>
-      <TimeBar audioInfo={ audioInfo } seekInfo={ seekInfo }
-        onSeekStart={v => setSeekInfo(p => ({...p,
-          isSeeking: true, seekTime: v
-        }))}
-        onSeekMove={v => setSeekInfo(p => ({...p, seekTime: v}))}
-        onSeekEnd={v => {
-          setSeekInfo(p => ({...p,
-            isSeeking: false, seekTime: v
-          }));
-          console.log('onSeekEnd ' + v);
-          audioRef.current.currentTime = v;
-          if (syncInfo.isSync)  syncSeek(v);
-          setAudioInfo(p => ({...p, isSeeking: true}));
-        }}
-      />
-      <div className="playerTimeWrapper">
-        <span className="playedTime">{ timeStr(seekOrCurTime) }</span>
-        <span className="remainedTime">{ timeStr(seekOrCurTime - audioInfo.duration) }</span>
-      </div>
-      <div className="playerButtonListWrapper">
-        <div className="playerButtonWrapper">
-          <PlayerButton type="back" onClick={ prevSong } />
-        </div>
-        <div className="playerButtonWrapper">
-          <PlayerButton type="play" audioInfo={ audioInfo } onClick={ switchPaused } />
-        </div>
-        <div className="playerButtonWrapper">
-          <PlayerButton type="forward" onClick={ nextSong } />
-        </div>
-      </div>
-      <div className="playerPanelButtonListWrapper">
-        <div className="playerButtonWrapper">
-          {/* <PlayerButton type="heart" /> */}
-          <IonIcon className="heartOutline" icon="desktopSharp" />
-        </div>
-      </div>
-    </div>
+    </CSSTransition>
   )
 
   const MiniPlayer = (
@@ -189,6 +196,11 @@ function Player(props) {
         onLoadedData={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState, isWaiting: false }))}
         onCanPlay={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState}))}
         onCanPlayThrough={e => console.log(e.type) || setAudioInfo(v => ({...v, readyState: e.target.readyState}))}
+
+        onEnded={e => {
+          if (syncInfo.isSync)  {}  //TODO sync 'finished play'
+          else nextSong();
+        }}
       />
       {/* <div>{audioInfo.currentTime}</div> */}
       

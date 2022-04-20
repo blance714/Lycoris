@@ -1,0 +1,29 @@
+.playerPanelButton {
+  position: relative;
+  height: 1.6rem;
+  width: 1.6rem;
+  border-radius: .2rem;
+
+  /* align-items: center;
+  text-align: center; */
+}
+
+.playerPanelButton.active {
+  background-color: silver;
+}
+
+.playerPanelButton > * {
+  color: darkgray;
+  position: absolute;
+  margin: auto;
+  height: 100%;
+  width: 80%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.playerPanelButton.active > * {
+  color: ghostwhite;
+}
