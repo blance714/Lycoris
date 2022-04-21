@@ -15,6 +15,7 @@ function PlayListProvider(props) {
   const [playList, setPlayList] = useState([
     {
       name: '白ゆき オルゴールver',
+      platform: 'local',
       url: shiro,
       artists: [{ name: 'n-buna' }],
       picUrl: shiroPic,
@@ -22,6 +23,7 @@ function PlayListProvider(props) {
     },
     {
       name: '死ぬにはいい日だった',
+      platform: 'local',
       url: smkni,
       artists: [{ name: 'Picon' }],
       picUrl: defPic,
@@ -29,6 +31,7 @@ function PlayListProvider(props) {
     },
     {
       name: 'カナデトモスソラ',
+      platform: 'local',
       url: kanade,
       artists: [{ name: 'Sasanomaly' }],
       picUrl: kanaPic,

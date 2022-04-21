@@ -25,12 +25,13 @@ class SearchItem extends React.Component {
   addSong = () => {
     // console.log(this.context);
     let url = '';
-    let p = Agent.getSongUrl(this.props.data.id)
-      .then(v => url = v);
-    Promise.all([p, this.getPicPromise])
+    // let p = Agent.getSongUrl(this.props.data.id)
+    //   .then(v => url = v);
+    Promise.all([this.getPicPromise])
       .then(() => this.context.songController.addSong({
         name: this.props.data.name,
-        url: url,
+        platform: this.props.data.platform,
+        id: this.props.data.id,
         artists: this.props.data.artists,
         picUrl: this.state.imgSrc
       }, false));

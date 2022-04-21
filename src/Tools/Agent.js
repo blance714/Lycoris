@@ -56,6 +56,7 @@ const Agent = {
     const parseSong = (d) => {
       let song = {};
       song.type = 'song';
+      song.platform = 'netease';
       song.id = d.id;
       song.name = d.name;
       song.artists = d.artists;

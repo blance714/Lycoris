@@ -5,12 +5,10 @@ import './Player.css'
 import TimeBar from "./TimeBar";
 
 import PlayerButton from "./PlayerButton";
-import { IonIcon } from "@ionic/react";
 import { PlayListContent } from "../Tools/PlayList";
 import classNames from "classnames";
 import PlayerPlayList from "./PlayerPlayList";
 import { CSSTransition } from "react-transition-group";
-import { list } from "ionicons/icons";
 import PlayerPanelButton from "./PlayerPanelButton";
 
 function timeStr(sec) {
@@ -49,6 +47,8 @@ function Player(props) {
   useEffect(() => {
     console.log(nowSong);
     playList[iterator] && console.log(`${playList[iterator].name} ${iterator}`);
+    audioRef.current.src = nowSong.platform === 'local' ? nowSong.url
+      : `https://music.163.com/song/media/outer/url?id=${nowSong.id}.mp3`
     !syncInfo.isSync && audioRef.current.play();
   }, [nowSong]);
 
@@ -62,13 +62,6 @@ function Player(props) {
         .catch(console.log);
     }}));
   }, [syncInfo.paused, syncInfo.isSync]);
-  
-  // useEffect(() => {
-  //   setSyncList(p => p.concat({ minState: 3, run: () => {
-  //     Promise.resolve(audioRef.current[syncInfo.pasued ? 'pause' : 'play']())
-  //       .catch(console.log);
-  //   }}))
-  // }, [syncInfo.isSync]);
   
   useEffect(() => {
     setSyncList(p => p.concat({ name: "time", minState: 1, run: () => {
@@ -170,7 +163,7 @@ function Player(props) {
 
   return (
     <div id='player-wrapper'>
-      <audio ref={ audioRef } src={ nowSong.url } preload="auto"
+      <audio ref={ audioRef } preload="auto"
         onTimeUpdate={e => {
           // console.log(`onTimeUpdate ${e.target.currentTime}`);
           setAudioInfo(v => ({...v, currentTime: e.target.currentTime}));
