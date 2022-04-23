@@ -10,14 +10,29 @@
     font-weight: bold;
     filter: blur(1.3px);
     
-    margin-top: 1rem;
+    margin: .5rem 0;
   }
   
   .dot {
-    font-size: 1.7rem;
-    height: 1.7rem;
     font-weight: bold;
-    overflow: hidden;
     margin: 0;
+    padding: 0 .15rem;
+    width: fit-content;
+    overflow: hidden;
+    
+    display: flex;
+    align-items: center;
+  }
+}
+
+.PlayerLyricsDots {
+  display: flex;
+
+  .dots {
+    background-color: #FFFC;
+    border-radius: 50%;
+    width: .8rem;
+    height: .8rem;
+    margin: .1rem;
   }
 }

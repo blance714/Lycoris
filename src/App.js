@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 import NavigateBar from './Pages/NavigateBar';
 import Player from './Player/Player';
+import Agent from './Tools/Agent';
 
 function App(props) {
   const [isFullMode, setIsFullMode] = useState(false);

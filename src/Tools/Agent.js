@@ -11,6 +11,8 @@ const cookie = 'MUSIC_U%3Dcf51b4a715af4cac950642fb5fd4922d44379c6e0ca0aec24416a0
 
 const neteaseAPI = 'https://netease-cloud-music-api-sable-ten.vercel.app/';
 
+let fontSizePx = null;
+
 const Agent = {
   /**
    * 
@@ -84,6 +86,14 @@ const Agent = {
   
     await Promise.all(promiseList);
     return resultList;
+  },
+
+  rem2px: rem => {
+    if (!fontSizePx) {
+      const str = getComputedStyle(document.documentElement).fontSize;
+      fontSizePx = parseFloat(str.substring(0, str.length - 2));
+    }
+    return rem * fontSizePx;
   }
 }
 
