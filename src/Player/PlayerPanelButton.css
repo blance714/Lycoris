@@ -9,11 +9,11 @@
 }
 
 .playerPanelButton.active {
-  background-color: silver;
+  background-color: rgba(255, 255, 255, 0.75);;
 }
 
 .playerPanelButton > * {
-  color: darkgray;
+  color: rgba(255, 255, 255, 0.75);
   position: absolute;
   margin: auto;
   height: 100%;
@@ -25,5 +25,5 @@
 }
 
 .playerPanelButton.active > * {
-  color: ghostwhite;
+  color: cornflowerblue;
 }

@@ -48,6 +48,11 @@ const Agent = {
       .then(v => v.data[0].url);
   },
 
+  getSongLyrics: function(id) {
+    return this.getJson(neteaseAPI + `lyric?id=${id}`)
+      .then(v => v.lrc.lyric);
+  },
+
   parseSearchResult: async function(data) {
     const res = data.result;
   

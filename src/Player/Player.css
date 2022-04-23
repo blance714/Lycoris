@@ -80,7 +80,8 @@
   height: 100%;
   box-sizing: border-box;
   padding: 0 1.5rem;
-  background-color: aliceblue;
+  color: white;
+  background: linear-gradient(135deg,#20bdb7,#9bc0f1)
 }
 
 #full-player img {
@@ -144,11 +145,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: bold;
 }
 
 #full-player .artistName {
   /* color: rgb(var(--ev-fg-color)); */
-  color: grey;
+  font-size: .8rem;
+  color: #FFFC;
 }
 
 #full-player .songTitleButton {

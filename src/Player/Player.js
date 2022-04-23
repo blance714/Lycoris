@@ -10,6 +10,8 @@ import classNames from "classnames";
 import PlayerPlayList from "./PlayerPlayList";
 import { CSSTransition } from "react-transition-group";
 import PlayerPanelButton from "./PlayerPanelButton";
+import PlayerLyrics from "./PlayerLyrics";
+import Agent from "../Tools/Agent";
 
 function timeStr(sec) {
   let rsec = Math.abs(Math.round(sec));
@@ -42,6 +44,7 @@ function Player(props) {
 
   const audioRef = React.useRef();
 
+  const [lrcStr, setLrcStr] = useState(null);
   const [syncList, setSyncList] = useState([]);
 
   useEffect(() => {
@@ -49,6 +52,8 @@ function Player(props) {
     playList[iterator] && console.log(`${playList[iterator].name} ${iterator}`);
     audioRef.current.src = nowSong.platform === 'local' ? nowSong.url
       : `https://music.163.com/song/media/outer/url?id=${nowSong.id}.mp3`
+    setLrcStr(null);
+    Agent.getSongLyrics(nowSong.id).then(v => setLrcStr(v));
     !syncInfo.isSync && audioRef.current.play();
   }, [nowSong]);
 
@@ -89,11 +94,11 @@ function Player(props) {
 
   const seekOrCurTime = seekInfo.isSeeking ? seekInfo.seekTime : audioInfo.currentTime;
 
-  const [panelCategory, setPanelCategory] = useState('none');
+  const [panelCategory, setPanelCategory] = useState({ type: 'list', isShown: false });
   
   const FullPlayer = (
-    <CSSTransition in={ panelCategory !== 'none' } timeout={500} classNames="showPanel" appear >
-      <div id='full-player' className={ classNames({ isPlaying: !audioInfo.paused, showPanel: panelCategory !== 'none' }) }
+    <CSSTransition in={ panelCategory.isShown } timeout={500} classNames="showPanel" appear >
+      <div id='full-player' className={ classNames({ isPlaying: !audioInfo.paused, showPanel: panelCategory.isShown }) }
         onClick={e => props.setIsFullMode(false)}>
         <img src={ nowSong.picUrl } />
         <div className="songTitleWrapper">
@@ -107,7 +112,10 @@ function Player(props) {
           </div>
         </div>
         <div className="panelWrapper">
-          <PlayerPlayList />
+          {panelCategory.type === 'list'
+            && <PlayerPlayList />
+            || <PlayerLyrics lrcStr={ lrcStr } time={ audioInfo.currentTime } />
+          }
         </div>
         <TimeBar audioInfo={ audioInfo } seekInfo={ seekInfo }
           onSeekStart={v => setSeekInfo(p => ({...p,
@@ -140,6 +148,7 @@ function Player(props) {
           </div>
         </div>
         <div className="playerPanelButtonListWrapper">
+            <PlayerPanelButton type="lyrics" panelCategory={[panelCategory, setPanelCategory]} />
             <PlayerPanelButton type="list" panelCategory={[panelCategory, setPanelCategory]} />
         </div>
       </div>
