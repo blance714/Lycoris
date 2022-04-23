@@ -60,7 +60,7 @@ function PlayerLyricsDots({ beginTime, endTime, nowTime }) {
   )
 }
 
-export default function PlayerLyrics({ lrcStr, time }) {
+export default function PlayerLyrics({ lrcStr, time, onSeek }) {
   const [lrc, setLrc] = useState([]);
 
   useEffect(() => {
@@ -131,7 +131,10 @@ export default function PlayerLyrics({ lrcStr, time }) {
                 endTime={ index + 1 !== lrc.length && lrc[index + 1].beginTime }
                 nowTime={ time } />}
           </a.div>
-        || <a.div className="lyric" key={index} style={{
+        || <a.div className="lyric" key={index} onClick={e => {
+          e.stopPropagation();
+          onSeek(lrc[index].beginTime)
+        }} style={{
           filter: blur.to(v => Math.max(0, v)).to(v => `blur(${v}px)`),
           transform: scale.to(v => `scale(${v})`),
           ...style

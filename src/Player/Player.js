@@ -92,6 +92,16 @@ function Player(props) {
     audioRef.current[audioInfo.paused ? 'play' : 'pause']();
   }
 
+  const seekTo = v => {
+    setSeekInfo(p => ({...p,
+      isSeeking: false, seekTime: v
+    }));
+    console.log('seekTo' + v);
+    audioRef.current.currentTime = v;
+    if (syncInfo.isSync)  syncSeek(v);
+    setAudioInfo(p => ({...p, isSeeking: true}));
+  }
+
   const seekOrCurTime = seekInfo.isSeeking ? seekInfo.seekTime : audioInfo.currentTime;
 
   const [panelCategory, setPanelCategory] = useState({ type: 'list', isShown: false });
@@ -114,7 +124,7 @@ function Player(props) {
         <div className="panelWrapper">
           {panelCategory.type === 'list'
             && <PlayerPlayList />
-            || <PlayerLyrics lrcStr={ lrcStr } time={ seekInfo.isSeeking || audioInfo.isSeeking ? seekInfo.seekTime : audioInfo.currentTime } />
+            || <PlayerLyrics onSeek={v => seekTo(v)} lrcStr={ lrcStr } time={ seekInfo.isSeeking || audioInfo.isSeeking ? seekInfo.seekTime : audioInfo.currentTime } />
           }
         </div>
         <TimeBar audioInfo={ audioInfo } seekInfo={ seekInfo }
@@ -122,15 +132,7 @@ function Player(props) {
             isSeeking: true, seekTime: v
           }))}
           onSeekMove={v => setSeekInfo(p => ({...p, seekTime: v}))}
-          onSeekEnd={v => {
-            setSeekInfo(p => ({...p,
-              isSeeking: false, seekTime: v
-            }));
-            console.log('onSeekEnd ' + v);
-            audioRef.current.currentTime = v;
-            if (syncInfo.isSync)  syncSeek(v);
-            setAudioInfo(p => ({...p, isSeeking: true}));
-          }}
+          onSeekEnd={v => seekTo(v)}
         />
         <div className="playerTimeWrapper">
           <span className="playedTime">{ timeStr(seekOrCurTime) }</span>
