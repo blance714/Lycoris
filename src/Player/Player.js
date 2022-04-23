@@ -53,7 +53,7 @@ function Player(props) {
     audioRef.current.src = nowSong.platform === 'local' ? nowSong.url
       : `https://music.163.com/song/media/outer/url?id=${nowSong.id}.mp3`
     setLrcStr(null);
-    Agent.getSongLyrics(nowSong.id).then(v => setLrcStr(v));
+    nowSong.id && Agent.getSongLyrics(nowSong.id).then(v => setLrcStr(v));
     !syncInfo.isSync && audioRef.current.play();
   }, [nowSong]);
 
@@ -114,7 +114,7 @@ function Player(props) {
         <div className="panelWrapper">
           {panelCategory.type === 'list'
             && <PlayerPlayList />
-            || <PlayerLyrics lrcStr={ lrcStr } time={ audioInfo.currentTime } />
+            || <PlayerLyrics lrcStr={ lrcStr } time={ seekInfo.isSeeking || audioInfo.isSeeking ? seekInfo.seekTime : audioInfo.currentTime } />
           }
         </div>
         <TimeBar audioInfo={ audioInfo } seekInfo={ seekInfo }

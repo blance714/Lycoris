@@ -14,6 +14,14 @@ const PlayListContent = createContext();
 function PlayListProvider(props) {
   const [playList, setPlayList] = useState([
     {
+      name: "携帯恋話 (feat. 東雲絵名&暁山瑞希&初音ミク)",
+      platform: 'netease',
+      id: 1864931358,
+      artists: [{ name: 'まふまふ' }],
+      picUrl: "https://p2.music.126.net/i0fDm7xXr9__LT9134D02Q==/109951166226941640.jpg",
+      uuid: genUUID()
+    },
+    {
       name: '白ゆき オルゴールver',
       platform: 'local',
       url: shiro,
