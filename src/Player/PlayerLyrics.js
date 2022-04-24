@@ -5,15 +5,16 @@ import Agent from "../Tools/Agent";
 import './PlayerLyrics.scss'
 
 function praseLyric(lrcStr) {
-  return [...lrcStr.matchAll(/\[(\d+):(\d+\.?\d+)\](.*$)/gm)]
-    .map((reg) => ({
-      beginTime: parseInt(reg[1]) * 60 + parseFloat(reg[2]),
-      content: reg[3]
-    }));
+  return [{ beginTime: 0, content: '' }].concat(
+    [...lrcStr.matchAll(/\[(\d+):(\d+\.?\d+)\](.*$)/gm)]
+      .map((reg) => ({
+        beginTime: parseInt(reg[1]) * 60 + parseFloat(reg[2]),
+        content: reg[3]
+      })));
 }
 
 function PlayerLyricsDots({ beginTime, endTime, nowTime }) {
-  const [style, api] = useSpring(() => ({ transform: 'scale(1)', opacity: 0 }));
+  const [style, api] = useSpring(() => ({ transform: 'scale(0)', opacity: 0 }));
 
   const active = beginTime <= nowTime && endTime >= nowTime;
 
@@ -25,13 +26,13 @@ function PlayerLyricsDots({ beginTime, endTime, nowTime }) {
       let first = true;
       const rev = () => {
         api.start({
-          transform: first ? 'scale(0.90)' : 'scale(1.13)',
+          transform: first ? 'scale(0.90)' : 'scale(1.1)',
           onRest: rev
         });
         first = !first;
       }
       api.start({ 
-        transform: 'scale(1.13)', opacity: 1,
+        transform: 'scale(1.1)', opacity: 1,
         config: {
           duration: 2000,
           easing: easings.easeInOutSine,
@@ -40,7 +41,7 @@ function PlayerLyricsDots({ beginTime, endTime, nowTime }) {
       });
       setID(setTimeout(() => api.start({
         to: [
-          { transform: 'scale(1.13)' },
+          { transform: 'scale(1.16)' },
           { transform: 'scale(0)', opacity: 0 }
         ],
         config: config.slow

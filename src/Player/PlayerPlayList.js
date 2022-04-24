@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
-import { PlayListContent } from "../Tools/PlayList";
+import { PlayListContext } from "../Tools/PlayList";
 
 import './PlayerPlayList.css';
 
@@ -7,7 +7,7 @@ function PlayerPlayList(props) {
   const {
     songInfo: { iterator, playList },
     songController: { changeSong }
-  } = useContext( PlayListContent );
+  } = useContext( PlayListContext );
 
   const listRef = useRef();
 

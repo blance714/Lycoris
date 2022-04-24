@@ -1,4 +1,4 @@
-import { createContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import Socket from './Socket';
 
 import shiro from '../Player/shiro.mp3';
@@ -7,10 +7,11 @@ import smkni from '../Player/smkni.mp3';
 import defPic from '../Player/shinu.jpeg';
 import kanade from '../Player/kanade.mp3';
 import kanaPic from '../Player/kanade.jpeg';
+import { MessagerContext } from '../Messager/Messager';
 
 function genUUID() { return Math.round(Math.random() * 1000000); }
 
-const PlayListContent = createContext();
+const PlayListContext = createContext();
 function PlayListProvider(props) {
   const [playList, setPlayList] = useState([
     {
@@ -51,7 +52,7 @@ function PlayListProvider(props) {
 
   const [syncInfo, setSyncInfo] = useState({
     isConnected: false,
-    name: null,
+    name: localStorage.name ? localStorage.name : 'qaq',
     roomID: null,
     avaliableRooms: [],
     paused: false,
@@ -62,6 +63,8 @@ function PlayListProvider(props) {
     }
   })
 
+  const { addMessage } = useContext(MessagerContext);
+
   //---Sync Controller---//
   let socketRef = useRef();
   const connectServer = () => {
@@ -70,11 +73,12 @@ function PlayListProvider(props) {
 
     socket.on('open', () => {
       setSyncInfo(p => ({...p, isConnected: true }));
-      setUpName('qaq');
+      socketRef.current.emit('setUpName', syncInfo.name);
       requestAvaliableRoom();
     });
     socket.on('close', () => {
       setSyncInfo(p => ({...p, isConnected: false, isSync: false }));
+      addMessage('断开和服务器的连接了qaq', 'warn')
     });
     socket.on('roomConnectionRefused', info => console.log(info));
     socket.on('roomConnected', ID => {
@@ -83,6 +87,7 @@ function PlayListProvider(props) {
       requestAvaliableRoom();
     });
     socket.on('avaliableRooms', rooms => setSyncInfo(p => ({...p, avaliableRooms: rooms })));
+    socket.on('message', data => addMessage(data.message, data.type));
 
     socket.on('sync', data => {
       'list' in data && setPlayList(data.list);
@@ -100,10 +105,9 @@ function PlayListProvider(props) {
   };
 
   const setUpName = name => {
-    // if (syncInfo.isConnected) {
-      socketRef.current.emit('setUpName', name);
-      setSyncInfo(p => ({...p, name: name }));
-    // }
+    localStorage.name = name;
+    setSyncInfo(p => ({...p, name: name }));
+    if (syncInfo.isConnected) socketRef.current.emit('setUpName', name);
   }
   const createRoom = () => {
     if (syncInfo.isConnected && syncInfo.name) {
@@ -136,6 +140,7 @@ function PlayListProvider(props) {
     console.log(song);
     if (now)  setPlayList(list => list.slice(0, iterator).concat(song, ...list.slice(iterator)));
     else  setPlayList(list => list.concat(song));
+    addMessage(`${song.name} 加入播放列表啦`, 'info');
   }
   const addSongRemote = (song, now) => {
     socketRef.current.emit('addSong', { song: song, now: now });
@@ -162,7 +167,7 @@ function PlayListProvider(props) {
   const nowSong = playList[iterator];
 
   return (
-    <PlayListContent.Provider value={{
+    <PlayListContext.Provider value={{
       songInfo: { playList, iterator, nowSong },
       songController: { addSong, nextSong, prevSong, changeSong }, 
       syncInfo,
@@ -173,9 +178,9 @@ function PlayListProvider(props) {
       }
     }}>
       {props.children}
-    </PlayListContent.Provider>
+    </PlayListContext.Provider>
   )
 }
 
-export { PlayListContent };
+export { PlayListContext };
 export default PlayListProvider;

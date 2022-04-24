@@ -10,7 +10,6 @@ function InputBox(props) {
     onFocus={props.handleFocus}
     onBlur={props.handleBlur}
     value={props.value}
-    // onEnter
   />
   return (
     <div className='inputBox'>

@@ -3,9 +3,10 @@
   font-weight: bold;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: opacity .3s;
 }
 
 .textButton:active {
-  color: rgba(var(--theme-color), 0.3);
+  opacity: .3;
   transition: none;
 }

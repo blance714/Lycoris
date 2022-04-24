@@ -2,7 +2,7 @@ import React from "react";
 import './SearchItem.css';
 import defImg from './default.svg'
 import Agent from "../../Tools/Agent";
-import { PlayListContent } from "../../Tools/PlayList";
+import { PlayListContext } from "../../Tools/PlayList";
 
 //TODO Add 'add to end && add to top'
 class SearchItem extends React.Component {
@@ -20,7 +20,7 @@ class SearchItem extends React.Component {
       // .then(v => v && this.setState({src: v}));
   }
 
-  static contextType = PlayListContent;
+  static contextType = PlayListContext;
 
   addSong = () => {
     // console.log(this.context);

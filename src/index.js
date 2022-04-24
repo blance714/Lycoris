@@ -13,6 +13,7 @@ import KeepAlive, { AliveScope } from 'react-activation';
 import PlayListProvider from './Tools/PlayList';
 import SyncSetting from './Pages/SyncSetting/SyncSetting';
 import PlayerPlayList from './Player/PlayerPlayList';
+import Messager from './Messager/Messager';
 
 function TestPage() {
   const location = useLocation();
@@ -33,7 +34,11 @@ function TestPage() {
               <Search />
             </KeepAlive>
           } />
-          <Route path='/test' element={<SyncSetting />} />
+          <Route path='/test' element={
+            <KeepAlive>
+              <SyncSetting />
+            </KeepAlive>
+          } />
         </Routes>
       </CSSTransition>
     </TransitionGroup>
@@ -57,12 +62,14 @@ function Root() {
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <PlayListProvider>
-        <AliveScope>
-          <Root />
-          {/* <PlayerPlayList /> */}
-        </AliveScope>
-      </PlayListProvider>
+      <Messager>
+        <PlayListProvider>
+          <AliveScope>
+            <Root />
+            {/* <PlayerPlayList /> */}
+          </AliveScope>
+        </PlayListProvider>
+      </Messager>
     </BrowserRouter>
   </React.StrictMode>,
 );

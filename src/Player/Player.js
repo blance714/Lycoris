@@ -5,13 +5,14 @@ import './Player.css'
 import TimeBar from "./TimeBar";
 
 import PlayerButton from "./PlayerButton";
-import { PlayListContent } from "../Tools/PlayList";
+import { PlayListContext } from "../Tools/PlayList";
 import classNames from "classnames";
 import PlayerPlayList from "./PlayerPlayList";
 import { CSSTransition } from "react-transition-group";
 import PlayerPanelButton from "./PlayerPanelButton";
 import PlayerLyrics from "./PlayerLyrics";
 import Agent from "../Tools/Agent";
+import { MessagerContext } from "../Messager/Messager";
 
 function timeStr(sec) {
   let rsec = Math.abs(Math.round(sec));
@@ -40,7 +41,9 @@ function Player(props) {
     songController: { nextSong, prevSong },
     syncInfo,
     syncController: { syncPlay, syncSeek, finishedPlay }
-  } = useContext(PlayListContent);
+  } = useContext(PlayListContext);
+
+  const { addMessage } = useContext(MessagerContext);
 
   const audioRef = React.useRef();
 
