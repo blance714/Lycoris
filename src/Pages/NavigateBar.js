@@ -7,11 +7,11 @@ import './NavigateBar.css'
 function NavigateBar() {
   return (
     <nav className='navigateBar'>
-      <NavLink to='search' className='navigateBarItem'>
+      <NavLink to='/' className='navigateBarItem'>
         <IonIcon className="navigateBarIcon" icon={ searchOutline }/>
         <span>Search</span>
       </NavLink>
-      <NavLink to='test' className='navigateBarItem'>
+      <NavLink to='/test' className='navigateBarItem'>
         <IonIcon className="navigateBarIcon" icon={ settingsSharp }/>
         <span>Test</span>
       </NavLink>

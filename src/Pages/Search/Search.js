@@ -24,12 +24,16 @@ class Search extends React.Component {
         <div id='searchbar-wrapper'>
           <SearchBar
             isFocusing={this.state.isFocusing}
-            handleFocus={(e) => this.setState({
-              isFocusing: true
-            })} 
-            handleBlur={(e) => this.setState({
+            handleFocus={(e) => {
+              console.log('focus');
+              this.setState({
+                isFocusing: true
+              })}} 
+              handleBlur={(e) => {
+                console.log('blur');
+              this.setState({
               isFocusing: false
-            })}
+            })}}
             handleSubmit={e => {
               console.log(e.target.input.value);
               Agent.search(e.target.input.value)
@@ -43,9 +47,7 @@ class Search extends React.Component {
           <SearchResult result={this.state.searchResult} />
         </div>
         <div id='search-suggestion-content-wrapper'>
-          {/* <KeepAlive id="3" saveScrollPosition="#search-suggestion-content-wrapper"> */}
-            <SearchContent isFocusing/>
-          {/* </KeepAlive> */}
+          <SearchContent isFocusing/>
         </div>
         <div style={{display: 'block',
           position: 'relative',

@@ -10,7 +10,7 @@ function PlayerPanelButton(props) {
   return (
     <div className={ buttonClass } onClick={e => {
       e.stopPropagation();
-      setPanelCategory(p => props.type === p.type ? {...p, isShown: !p.isShown } : {...p, type: props.type});
+      setPanelCategory(p => props.type === p.type ? {...p, isShown: !p.isShown } : {...p, type: props.type, isShown: true });
     }}>
       <IonIcon icon={ props.type === 'list' ? list : chatboxEllipses } />
     </div>

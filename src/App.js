@@ -5,6 +5,7 @@ import NavigateBar from './Pages/NavigateBar';
 import Player from './Player/Player';
 import Agent from './Tools/Agent';
 import Messager from './Messager/Messager';
+import { AliveScope } from 'react-activation';
 
 function App(props) {
   const [isFullMode, setIsFullMode] = useState(false);

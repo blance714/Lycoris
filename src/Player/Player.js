@@ -179,7 +179,7 @@ function Player(props) {
     <div id='player-wrapper'>
       <audio ref={ audioRef } preload="auto"
         onTimeUpdate={e => {
-          // console.log(`onTimeUpdate ${e.target.currentTime}`);
+          console.log(`onTimeUpdate ${e.target.currentTime}`);
           setAudioInfo(v => ({...v, currentTime: e.target.currentTime}));
         }}
         onPause={e => setAudioInfo(v => ({...v, paused: e.target.paused}))}

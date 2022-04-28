@@ -15,6 +15,13 @@ import SyncSetting from './Pages/SyncSetting/SyncSetting';
 import PlayerPlayList from './Player/PlayerPlayList';
 import Messager from './Messager/Messager';
 
+import { autoFixContext } from 'react-activation'
+
+autoFixContext(
+  [require('react/jsx-runtime'), 'jsx', 'jsxs', 'jsxDEV'],
+  [require('react/jsx-dev-runtime'), 'jsx', 'jsxs', 'jsxDEV']
+);
+
 function TestPage() {
   const location = useLocation();
   const navigationType = useNavigationType();
@@ -29,16 +36,6 @@ function TestPage() {
     })}>
       <CSSTransition key={location.pathname} timeout={300}>
         <Routes location={location}>
-          <Route path='/search' element={
-            <KeepAlive saveScrollPosition="#page-wrapper">
-              <Search />
-            </KeepAlive>
-          } />
-          <Route path='/test' element={
-            <KeepAlive>
-              <SyncSetting />
-            </KeepAlive>
-          } />
         </Routes>
       </CSSTransition>
     </TransitionGroup>
@@ -52,26 +49,34 @@ function Root() {
   return (
     // <Player />
     <App>
-      <TestPage />
-      {/* <Player /> */}
-      {/* <Test /> */}
+      <Routes>
+        <Route index element={
+          <KeepAlive saveScrollPosition="#page-wrapper" id="1" key="1">
+            <Search />
+          </KeepAlive>
+        } />
+        <Route path='/test' element={
+          <KeepAlive id="2" key="2">
+            <SyncSetting />
+          </KeepAlive>
+        } />
+      </Routes>
     </App>
   )
 }
 
 createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
-      <Messager>
-        <PlayListProvider>
-          <AliveScope>
+      <AliveScope>
+        <Messager>  
+          <PlayListProvider>
             <Root />
-            {/* <PlayerPlayList /> */}
-          </AliveScope>
-        </PlayListProvider>
-      </Messager>
+          </PlayListProvider>
+        </Messager>
+      </AliveScope>
     </BrowserRouter>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 );
 
 window.onresize = () => {
