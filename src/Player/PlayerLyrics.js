@@ -86,7 +86,7 @@ export default function PlayerLyrics({ lrcStr, time, onSeek }) {
     Object.assign({
       config: { tension: 190, friction: 30 },
     }, lyric.content === '' ? ( i === nowLyric && showDot ? {
-      height: '2.7rem',
+      height: '3.15rem',
     } : {
       height: '0rem',
       config: config.slow
@@ -109,9 +109,7 @@ export default function PlayerLyrics({ lrcStr, time, onSeek }) {
         (nowLyric - 1 >= 0 && lrc[nowLyric - 1].content === '' ? nowLyric - 2 : nowLyric - 1);
       if (!ref.current.children[target])  return 0;
       const childRect = ref.current.children[target].getBoundingClientRect();
-      if (showDot) return childRect.top + ref.current.scrollTop
-        - 40 - Agent.rem2px(.5) - ref.current.getBoundingClientRect().top;
-      return childRect.top + childRect.height + ref.current.scrollTop
+      return childRect.top + (showDot ? 0 : childRect.height) + ref.current.scrollTop
         - 40 - ref.current.getBoundingClientRect().top;
     } else return 0;
   }, [time, showDot]);
@@ -125,7 +123,7 @@ export default function PlayerLyrics({ lrcStr, time, onSeek }) {
     <a.div className="PlayerLyrics" ref={ref} scrollTop={ scroll }>
       {springs.map(({ blur, scale, ...style }, index) => (
         lrc[index].content === ''
-        && <a.div className="dot" style={ style }>
+        && <a.div className="dot" key={index} style={ style }>
             {index + 1 !== lrc.length && (lrc[index + 1].beginTime - lrc[index].beginTime > 4)
             && <PlayerLyricsDots
                 beginTime={ lrc[index].beginTime }

@@ -108,6 +108,7 @@ function PlayListProvider(props) {
     localStorage.name = name;
     setSyncInfo(p => ({...p, name: name }));
     if (syncInfo.isConnected) socketRef.current.emit('setUpName', name);
+    addMessage(`设置了名字：${name}`, 'info');
   }
   const createRoom = () => {
     if (syncInfo.isConnected && syncInfo.name) {
