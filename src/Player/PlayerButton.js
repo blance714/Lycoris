@@ -9,7 +9,7 @@ function PlayerButton(props) {
   let nowIconProp = {};
 
   const isWaiting = props.type === 'play' 
-    && props.audioInfo.readyState < (props.audioInfo.paused ? 1 : 2);
+    && props.audioInfo.readyState < (props.audioInfo.paused ? 1 : 3);
 
   if (props.type === 'forward') nowIconProp = { icon: playForward };
   else if (props.type === 'back') nowIconProp = { icon: playBack };
