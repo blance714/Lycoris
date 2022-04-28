@@ -15,11 +15,11 @@ const PlayListContext = createContext();
 function PlayListProvider(props) {
   const [playList, setPlayList] = useState([
     {
-      name: "携帯恋話 (feat. 東雲絵名&暁山瑞希&初音ミク)",
+      name: "回る空うさぎ",
       platform: 'netease',
-      id: 1864931358,
-      artists: [{ name: 'まふまふ' }],
-      picUrl: "https://p2.music.126.net/i0fDm7xXr9__LT9134D02Q==/109951166226941640.jpg",
+      id: 458231455,
+      artists: [{ name: 'Orangestar' }],
+      picUrl: "https://p2.music.126.net/WT3eISFoAum31NVAIKgKWg==/109951165868174091.jpg",
       uuid: genUUID()
     },
     {
@@ -70,6 +70,7 @@ function PlayListProvider(props) {
   const connectServer = () => {
     socketRef.current = new Socket('wss://balanca.cn:3001/');
     const socket = socketRef.current;
+    addMessage('正在尝试连接服务器……', 'warn');
 
     socket.on('open', () => {
       setSyncInfo(p => ({...p, isConnected: true }));

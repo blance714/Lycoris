@@ -15,13 +15,6 @@ import SyncSetting from './Pages/SyncSetting/SyncSetting';
 import PlayerPlayList from './Player/PlayerPlayList';
 import Messager from './Messager/Messager';
 
-import { autoFixContext } from 'react-activation'
-
-autoFixContext(
-  [require('react/jsx-runtime'), 'jsx', 'jsxs', 'jsxDEV'],
-  [require('react/jsx-dev-runtime'), 'jsx', 'jsxs', 'jsxDEV']
-);
-
 function TestPage() {
   const location = useLocation();
   const navigationType = useNavigationType();
@@ -51,14 +44,14 @@ function Root() {
     <App>
       <Routes>
         <Route index element={
-          <KeepAlive saveScrollPosition="#page-wrapper" id="1" key="1">
+          // <KeepAlive saveScrollPosition="#page-wrapper" id="1" key="1">
             <Search />
-          </KeepAlive>
+          // </KeepAlive>
         } />
         <Route path='/test' element={
-          <KeepAlive id="2" key="2">
+          // <KeepAlive id="2" key="2">
             <SyncSetting />
-          </KeepAlive>
+          // </KeepAlive>
         } />
       </Routes>
     </App>
@@ -68,13 +61,13 @@ function Root() {
 createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
     <BrowserRouter>
-      <AliveScope>
-        <Messager>  
+      {/* <AliveScope> */}
+        <Messager>
           <PlayListProvider>
             <Root />
           </PlayListProvider>
         </Messager>
-      </AliveScope>
+      {/* </AliveScope> */}
     </BrowserRouter>
   // </React.StrictMode>,
 );
