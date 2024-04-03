@@ -24,7 +24,7 @@
   left: 50%;
   top: 50%;
   border-radius: 50%;
-  background-color: lightpink;
+  background-color: whitesmoke;
   transform: translate(-50%, -50%);
   
   transition: width .2s cubic-bezier(0.36, 1.33, 0.83, 1.07), height .2s cubic-bezier(0.36, 1.33, 0.83, 1.07);

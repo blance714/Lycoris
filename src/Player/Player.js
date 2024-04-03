@@ -120,9 +120,9 @@ function Player(props) {
             <span className="songTitleName">{ nowSong.name }</span>
             <span className="artistName">{ nowSong.artists[0].name }</span>
           </div>
-          <div className="songTitleButton">
+          {/* <div className="songTitleButton">
             <PlayerButton type="back" />
-          </div>
+          </div> */}
         </div>
         <div className="panelWrapper">
           {panelCategory.type === 'list'

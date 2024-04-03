@@ -91,9 +91,9 @@ export default function PlayerLyrics({ lrcStr, time, onSeek }) {
       height: '0rem',
       config: config.slow
     }) : (i === nowLyric ? {
-      blur: -0.2, color: '#FFF', textShadow: '0 0 1rem #999A', scale: '105%'
+      blur: -0.2, color: '#FFF', textShadow: '0 0 1rem #999A', scale: '100%', translateX: '0%'
     } : {
-      blur: 1.3, color: '#FFFC', textShadow: '0 0 1rem #9990', scale: '100%'
+      blur: 1.3, color: '#FFFC', textShadow: '0 0 1rem #9990', scale: '96%', translateX: '-2%'
     }))
   )));
   

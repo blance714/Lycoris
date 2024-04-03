@@ -24,24 +24,24 @@ function PlayListProvider(props) {
     },
     {
       name: '白ゆき オルゴールver',
-      platform: 'local',
-      url: shiro,
+      platform: 'netease',
+      id: 424264348,
       artists: [{ name: 'n-buna' }],
       picUrl: shiroPic,
       uuid: genUUID()
     },
     {
       name: '死ぬにはいい日だった',
-      platform: 'local',
-      url: smkni,
+      platform: 'netease',
+      id: 2135856573,
       artists: [{ name: 'Picon' }],
       picUrl: defPic,
       uuid: genUUID()
     },
     {
       name: 'カナデトモスソラ',
-      platform: 'local',
-      url: kanade,
+      platform: 'netease',
+      id: 1988508925,
       artists: [{ name: 'Sasanomaly' }],
       picUrl: kanaPic,
       uuid: genUUID()
@@ -52,7 +52,7 @@ function PlayListProvider(props) {
 
   const [syncInfo, setSyncInfo] = useState({
     isConnected: false,
-    name: localStorage.name ? localStorage.name : 'qaq',
+    name: localStorage.name ? localStorage.name : 'anonymous',
     roomID: null,
     avaliableRooms: [],
     paused: false,
@@ -68,7 +68,7 @@ function PlayListProvider(props) {
   //---Sync Controller---//
   let socketRef = useRef();
   const connectServer = () => {
-    socketRef.current = new Socket('wss://balanca.cn:3001/');
+    socketRef.current = new Socket('wss://blance714.icu:3001/');
     const socket = socketRef.current;
     addMessage('正在尝试连接服务器……', 'warn');
 
@@ -79,7 +79,7 @@ function PlayListProvider(props) {
     });
     socket.on('close', () => {
       setSyncInfo(p => ({...p, isConnected: false, isSync: false }));
-      addMessage('断开和服务器的连接了qaq', 'warn')
+      addMessage('断开和服务器的连接了', 'warn')
     });
     socket.on('roomConnectionRefused', info => console.log(info));
     socket.on('roomConnected', ID => {
